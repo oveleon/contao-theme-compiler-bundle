@@ -1,0 +1,22 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_maintenance.php" source-language="en" target-language="de">
+    <body>
+      <trans-unit id="tl_maintenance.themeCompiler">
+        <source>Theme-Compiler</source>
+        <target>Theme-Compiler</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.themeCompilerCompile">
+        <source>Compile files</source>
+        <target>Dateien kompilieren</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.themeCompilerThemePicker">
+        <source>Please select a theme for which you want to recompile the files.</source>
+        <target>Bitte wählen Sie ein Theme aus, für das die Dateien neu kompiliert werden sollen.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.themeCompilerNoTheme">
+        <source>No theme selected.</source>
+        <target>Es wurde kein Theme ausgewählt.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_theme.php" source-language="en">
+    <body>
+      <trans-unit id="tl_theme.compiler_legend">
+        <source>Theme-Compiler</source>
+      </trans-unit>
+      <trans-unit id="tl_theme.skinSourceFiles.0">
+        <source>Skin source files</source>
+      </trans-unit>
+      <trans-unit id="tl_theme.skinSourceFiles.1">
+        <source>Select the files to compile and their order here.</source>
+      </trans-unit>
+      <trans-unit id="tl_theme.combineSkinFiles.0">
+        <source>Combine skin source files</source>
+      </trans-unit>
+      <trans-unit id="tl_theme.combineSkinFiles.1">
+        <source>Combines all skin source files. Otherwise all files will be stored separately.</source>
+      </trans-unit>
+      <trans-unit id="tl_theme.outputFilesTargetDir.0">
+        <source>Target-Directory</source>
+      </trans-unit>
+      <trans-unit id="tl_theme.outputFilesTargetDir.1">
+        <source>Specify the location where the compiled file(s) should be stored.</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

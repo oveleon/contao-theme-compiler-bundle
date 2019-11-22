@@ -1,0 +1,47 @@
+<div id="tl_theme_compiler" class="maintenance_<?= $this->isActive ? 'active' : 'inactive' ?>">
+    <h2 class="sub_headline"><?= $this->headline ?></h2>
+
+    <?php if ($this->explain): ?>
+        <div class="tl_message">
+            <p class="<?= $this->class ?>"><?= $this->explain ?></p>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($this->isRunning): ?>
+        <div class="tc_box">
+            <?=$this->logs?>
+        </div>
+
+        <form action="<?= $this->action ?>" class="tl_form" method="get">
+            <div class="tl_formbody_submit">
+                <div class="tl_submit_container">
+                    <input type="hidden" name="do" value="maintenance">
+                    <button type="submit" id="index" class="tl_submit"><?= $this->indexContinue ?></button>
+                </div>
+            </div>
+        </form>
+    <?php else: ?>
+        <form action="<?= $this->action ?>" class="tl_form" method="get">
+            <input type="hidden" name="act" value="compile">
+            <input type="hidden" name="do" value="maintenance">
+            <input type="hidden" name="rt" value="<?= REQUEST_TOKEN ?>">
+            <fieldset class="tl_tbox nolegend">
+                <div class="w50">
+                    <h3><label for="ctrl_theme">Theme</label></h3>
+                    <select name="theme" id="ctrl_theme" class="tl_select">
+                        <?php if ($this->themes): ?>
+                            <option value="">-</option>
+                            <?php foreach ($this->themes as $id=>$name): ?>
+                                <option value="<?= $id ?>"><?= $name ?></option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </select>
+                    <p class="tl_help tl_tip"><?= $this->themesDescription ?></p>
+                </div>
+            </fieldset>
+            <div class="tl_submit_container">
+                <button type="submit" id="compile" class="tl_submit"><?= $this->submit ?></button>
+            </div>
+        </form>
+    <?php endif; ?>
+</div>
