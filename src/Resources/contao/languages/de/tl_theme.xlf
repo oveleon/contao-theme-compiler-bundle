@@ -29,6 +29,14 @@
         <source>Specify the location where the compiled file(s) should be stored.</source>
         <target>Geben Sie hier an, an welchem Ort die kompilierte/n Datei/en abgelegt werden soll.</target>
       </trans-unit>
+      <trans-unit id="tl_theme.compileConfig.0">
+        <source>Compile theme files</source>
+        <target>Theme-Dateien kompilieren</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.compileConfig.1">
+        <source>Compile theme files</source>
+        <target>Theme-Dateien kompilieren</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

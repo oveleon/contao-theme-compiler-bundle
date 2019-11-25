@@ -23,6 +23,12 @@
       <trans-unit id="tl_theme.outputFilesTargetDir.1">
         <source>Specify the location where the compiled file(s) should be stored.</source>
       </trans-unit>
+      <trans-unit id="tl_theme.compileConfig.0">
+        <source>Compile theme files</source>
+      </trans-unit>
+      <trans-unit id="tl_theme.compileConfig.1">
+        <source>Compile theme files</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
