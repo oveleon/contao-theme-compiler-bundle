@@ -2,14 +2,35 @@
   padding: 6px 15px 14px;
 }
 .tc_box > div {
+  font-family: "consolas", monospace;
   padding: 6px;
   margin-bottom: 2px;
-  background: #f1f1f1;
+  background: #f9f9f9;
+  color: #696969;
+}
+.tc_box > div b {
+  font-family: Lato, sans-serif;
   color: #2a2a2a;
 }
 .tc_box > div + .head {
+  position: relative;
+  font-family: Lato, sans-serif;
+  color: #2a2a2a;
   margin-top: 15px;
-  padding: 8px 6px;
+  padding: 9px 6px 8px 30px;
+  border-bottom: 1px solid #e8e8e8;
+  border-radius: 3px 3px 0 0;
+}
+.tc_box > div + .head:before {
+  position: absolute;
+  left: 6px;
+  top: 7px;
+  display: block;
+  content: "";
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+  background: url("/bundles/contaothemecompiler/icons/link.svg");
 }
 .tc_box > div.head {
   font-weight: 600;

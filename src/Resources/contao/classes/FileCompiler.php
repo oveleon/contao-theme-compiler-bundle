@@ -265,8 +265,7 @@ class FileCompiler
             // Use config file
             if($this->config)
             {
-                // ToDo: Add generated config
-                #$strConfig = $this->config;
+                $strConfig = $this->config;
             }
 
             // First the default configuration is added, then the theme configuration
@@ -446,7 +445,7 @@ class FileCompiler
 
                 $this->config = $strConfig;
 
-                $this->msg('<b>Theme-Config:</b> tl_theme.' . $sourceField);
+                $this->msg('<b>Theme-Config:</b> ' . $sourceField);
             }
         }
     }
@@ -458,6 +457,11 @@ class FileCompiler
      */
     public function parseVariableValue($varValue)
     {
+        if(!$varValue)
+        {
+            return '';
+        }
+
         $varUnserialized = @unserialize($varValue);
 
         if (\is_array($varUnserialized))
