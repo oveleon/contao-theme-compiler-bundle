@@ -290,7 +290,7 @@ class FileCompiler
                 $objCompiler->setVariables($globalVars);
             }
 
-            $objCompiler->getVariables();
+            //$objCompiler->getVariables();
         }
 
         try
@@ -437,9 +437,9 @@ class FileCompiler
                 {
                     $configVal = $this->parseVariableValue($varValue);
 
-                    if($configVal)
+                    if($configVal || is_bool($configVal))
                     {
-                        $strConfig .= sprintf("$%s:%s;\n", $key, $configVal);
+                        $strConfig .= sprintf("$%s:%s;\n", $key, is_bool($configVal) ? ($configVal ? 'true' : 'false')  : $configVal);
                     }
                 }
 
@@ -459,7 +459,7 @@ class FileCompiler
     {
         if(!$varValue)
         {
-            return '';
+            return $varValue;
         }
 
         $varUnserialized = @unserialize($varValue);
