@@ -515,7 +515,14 @@ class FileCompiler
             return '#' . $varValue;
         }
 
-        // ToDo HOOK
+        if (isset($GLOBALS['TL_HOOKS']['compilerParseVariableValue']) && \is_array($GLOBALS['TL_HOOKS']['compilerParseVariableValue']))
+        {
+            foreach ($GLOBALS['TL_HOOKS']['compilerParseVariableValue'] as $callback)
+            {
+                $this->import($callback[0]);
+                $varValue = $this->{$callback[0]}->{$callback[1]}($varValue);
+            }
+        }
 
         return $varValue;
     }
