@@ -481,6 +481,22 @@ class FileCompiler
                 return $varUnserialized['value'] . $varUnserialized['unit'];
             }
 
+            // handle a keyValue field
+            elseif(isset($varUnserialized[0]['key']) && isset($varUnserialized[0]['value']))
+            {
+                $arrList = array();
+
+                foreach ($varUnserialized as $ind => $opts)
+                {
+                    if($opts['key'] && $opts['value'])
+                    {
+                        $arrList[] = $opts['key'] . ':' . $opts['value'];
+                    }
+                }
+
+                return '(' . implode(',', $arrList) . ')';
+            }
+
             // handle color field with transparency
             elseif(count($varUnserialized) === 2 && ctype_xdigit($varUnserialized[0]))
             {
