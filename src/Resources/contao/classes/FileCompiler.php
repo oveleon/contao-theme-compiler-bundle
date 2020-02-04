@@ -464,15 +464,43 @@ class FileCompiler
 
         $varUnserialized = @unserialize($varValue);
 
+        // handle empty or variable values
+        list($blnValid, $val) = $this->isValidValue(\is_array($varUnserialized) ? $varUnserialized : $varValue);
+
+        if(!$blnValid)
+        {
+            return $val;
+        }
+
+        // parse values
         if (\is_array($varUnserialized))
         {
             // handle a four sizes field with unit
-            if(isset($varUnserialized['bottom']))
+            if(isset($varUnserialized['top']))
             {
-                return $varUnserialized['top']    . $varUnserialized['unit'] . ' '.
-                       $varUnserialized['right']  . $varUnserialized['unit'] . ' '.
-                       $varUnserialized['bottom'] . $varUnserialized['unit'] . ' '.
-                       $varUnserialized['left']   . $varUnserialized['unit'];
+                $strValue = '';
+
+                if($varUnserialized['top'])
+                {
+                    $strValue .= $varUnserialized['top'] . $varUnserialized['unit'] . ' ';
+                }
+
+                if($varUnserialized['top'] && $varUnserialized['right'])
+                {
+                    $strValue .= $varUnserialized['right'] . $varUnserialized['unit'] . ' ';
+                }
+
+                if($varUnserialized['top'] && $varUnserialized['right'] && $varUnserialized['bottom'])
+                {
+                    $strValue .= $varUnserialized['bottom'] . $varUnserialized['unit'] . ' ';
+                }
+
+                if($varUnserialized['top'] && $varUnserialized['right'] && $varUnserialized['bottom'] && $varUnserialized['left'])
+                {
+                    $strValue .= $varUnserialized['left'] . $varUnserialized['unit'];
+                }
+
+                return trim($strValue);
             }
 
             // handle a single field with unit
@@ -497,19 +525,22 @@ class FileCompiler
                 return '(' . implode(',', $arrList) . ')';
             }
 
-            // handle color field with transparency
-            elseif(count($varUnserialized) === 2 && ctype_xdigit($varUnserialized[0]))
+            // handle two-size color fields
+            elseif(count($varUnserialized) === 2)
             {
-                if($varUnserialized[1])
+                if(ctype_xdigit($varUnserialized[0]))
                 {
-                    return 'rgba(' . implode(',', $this->convertHexColor($varUnserialized[0])) . ',' . ($varUnserialized[1] / 100) . ')';
+                    if($varUnserialized[1])
+                    {
+                        return 'rgba(' . implode(',', $this->convertHexColor($varUnserialized[0])) . ',' . ($varUnserialized[1] / 100) . ')';
+                    }
                 }
 
                 $varValue = $varUnserialized[0];
             }
         }
 
-        // handle a single color field
+        // handle colors
         if (ctype_xdigit($varValue) && strpos($varValue, '#') !== 0 && (\strlen($varValue) == 6 || \strlen($varValue) == 3))
         {
             return '#' . $varValue;
@@ -525,6 +556,62 @@ class FileCompiler
         }
 
         return $varValue;
+    }
+
+    /**
+     * Validate Value
+     *
+     * @param $varValue
+     *
+     * @return array
+     */
+    protected function isValidValue($varValue)
+    {
+        if(\is_array($varValue))
+        {
+            // empty lists
+            if(!count($varValue))
+            {
+                return [false, ''];
+            }
+
+            // top,right,bottom,left / unit
+            if(array_key_exists('top', $varValue) && (!$varValue['unit'] || !$varValue['top']))
+            {
+                if(strpos($varValue['top'], '$') === 0)
+                {
+                    return [false, $varValue['top']];
+                }
+
+                return [false, ''];
+            }
+
+            // value / unit
+            if(array_key_exists('unit', $varValue) && !array_key_exists('top', $varValue) && (!$varValue['unit'] || !$varValue['value']))
+            {
+                if(strpos($varValue['value'], '$') === 0)
+                {
+                    return [false, $varValue['value']];
+                }
+
+                return [false, ''];
+            }
+
+            // empty color values (with transparency)
+            if(count($varValue) === 2)
+            {
+                if(!count(array_filter($varValue))){
+                    return [false, ''];
+                }
+
+                if(strpos($varValue[0], '$') === 0)
+                {
+                    return [false, $varValue[0]];
+                }
+            }
+        }
+
+        return [true, $varValue];
     }
 
     /**
