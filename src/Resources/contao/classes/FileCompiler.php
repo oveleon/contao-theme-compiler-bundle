@@ -541,7 +541,7 @@ class FileCompiler
         }
 
         // handle colors
-        if (ctype_xdigit($varValue) && strpos($varValue, '#') !== 0 && (\strlen($varValue) == 6 || \strlen($varValue) == 3))
+        if (ctype_xdigit($varValue) && strpos($varValue, '#') !== 0 && \strlen($varValue) == 6)
         {
             return '#' . $varValue;
         }
