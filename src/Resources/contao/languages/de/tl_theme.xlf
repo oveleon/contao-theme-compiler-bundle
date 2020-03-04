@@ -21,6 +21,14 @@
         <source>Combines all skin source files. Otherwise, all selected files will be stored separately.</source>
         <target>Kombiniert alle Skin-Quelldateien. Andernfalls werden alle gewählten Dateien einzeln abgelegt.</target>
       </trans-unit>
+      <trans-unit id="tl_theme.backupFiles.0">
+        <source>Create backup files</source>
+        <target>Backup-Dateien anlegen</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.backupFiles.1">
+        <source>Copies existing files to a subfolder of the destination before compilation to be able to restore them later.</source>
+        <target>Kopiert bestehende Dateien vor dem kompilieren in einen Unterorder des Zielorts um diese später wiederherstellen zu können.</target>
+      </trans-unit>
       <trans-unit id="tl_theme.outputFilesTargetDir.0">
         <source>Target-Directory</source>
         <target>Zielort</target>

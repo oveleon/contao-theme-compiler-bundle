@@ -23,7 +23,6 @@ $GLOBALS['TL_DCA']['tl_theme']['fields']['combineSkinFiles'] = array
     'label'                   => &$GLOBALS['TL_LANG']['tl_theme']['combineSkinFiles'],
     'exclude'                 => true,
     'inputType'               => 'checkbox',
-    'eval'                    => array('fieldType'=>'radio'),
     'sql'                     => "char(1) NOT NULL default ''"
 );
 
@@ -36,11 +35,18 @@ $GLOBALS['TL_DCA']['tl_theme']['fields']['outputFilesTargetDir'] = array
     'sql'                     => "blob NULL"
 );
 
+$GLOBALS['TL_DCA']['tl_theme']['fields']['backupFiles'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_theme']['backupFiles'],
+    'exclude'                 => true,
+    'inputType'               => 'checkbox',
+    'sql'                     => "char(1) NOT NULL default ''"
+);
 
 // Extend the default palette
 Contao\CoreBundle\DataContainer\PaletteManipulator::create()
     ->addLegend('compiler_legend', 'vars_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
-    ->addField(array('skinSourceFiles', 'outputFilesTargetDir', 'combineSkinFiles'), 'compiler_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
+    ->addField(array('skinSourceFiles', 'outputFilesTargetDir', 'combineSkinFiles', 'backupFiles'), 'compiler_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('default', 'tl_theme');
 
 /**

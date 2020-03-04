@@ -17,6 +17,12 @@
       <trans-unit id="tl_theme.combineSkinFiles.1">
         <source>Combines all skin source files. Otherwise all files will be stored separately.</source>
       </trans-unit>
+      <trans-unit id="tl_theme.backupFiles.0">
+        <source>Create backup files</source>
+      </trans-unit>
+      <trans-unit id="tl_theme.backupFiles.1">
+        <source>Copies existing files to a subfolder of the destination before compilation to be able to restore them later.</source>
+      </trans-unit>
       <trans-unit id="tl_theme.outputFilesTargetDir.0">
         <source>Target-Directory</source>
       </trans-unit>

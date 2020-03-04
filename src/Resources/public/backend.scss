@@ -14,10 +14,13 @@
     }
 
     + .head{
+      margin-top: 15px;
+    }
+
+    &.head{
       position: relative;
       font-family: Lato,sans-serif;
       color: #2a2a2a;
-      margin-top: 15px;
       padding: 9px 6px 8px 30px;
       border-bottom: 1px solid #e8e8e8;
       border-radius: 3px 3px 0 0;

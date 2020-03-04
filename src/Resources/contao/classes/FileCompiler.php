@@ -50,16 +50,10 @@ class FileCompiler
     protected $objTheme;
 
     /**
-     * Base file path
-     * @var string
-     */
-    protected $base;
-
-    /**
      * Source path to config
-     * @var string
+     * @var array
      */
-    protected $configFile;
+    protected $configFiles = null;
 
     /**
      * Configuration fields from custom table field in tl_theme
@@ -121,19 +115,13 @@ class FileCompiler
             trigger_error('Missing settings for Theme ' . $this->objTheme->name . ': No target directory could be found.', E_USER_ERROR);
         }
 
-        // Before data is collected from the config, the base path must be set.
-        if(isset($GLOBALS['TC_SOURCES']['basePath']))
-        {
-            $this->setBase($GLOBALS['TC_SOURCES']['basePath']);
-        }
-
         // Collect data from config
         foreach ($GLOBALS['TC_SOURCES'] as $type => $var)
         {
             switch($type)
             {
-                case 'configFile':
-                    $this->setConfigFile($var);
+                case 'configFiles':
+                    $this->setConfigFiles($var);
                     break;
 
                 case 'configField':
@@ -258,20 +246,26 @@ class FileCompiler
             $objCompiler->setImportPaths($this->importPaths);
         }
 
-        if($this->configFile)
+        if($this->configFiles !== null)
         {
-            $strConfig = '';
+            $tableConfigContent = '';
+            $scssConfigContent = '';
 
             // Use config file
             if($this->config)
             {
-                $strConfig = $this->config;
+                $tableConfigContent = $this->config;
+            }
+
+            foreach ($this->configFiles as $configFile)
+            {
+                $scssConfigContent .= $this->getFileContent($configFile);
             }
 
             // First the default configuration is added, then the theme configuration
             // which can override the defaults, and then all other files are added.
-            $content = $this->getFileContent($this->configFile) .
-                       $strConfig .
+            $content = $scssConfigContent .
+                       $tableConfigContent .
                        $content;
         }
         else
@@ -317,6 +311,12 @@ class FileCompiler
     private function saveFile($content, $filename, $ext = self::FILE_EXT)
     {
         $objFile = new \File($this->targetDir . '/' . $filename . $ext);
+
+        if($this->objTheme->backupFiles && $objFile->exists())
+        {
+            $objFile->copyTo($this->targetDir . '/compiler_backup/' . $filename . '_' . date('Y-m-d_H-i') . $ext);
+        }
+
         $objFile->truncate();
         $objFile->write($content . "\n/** Compiled with Theme Compiler */");
 
@@ -394,26 +394,26 @@ class FileCompiler
     }
 
     /**
-     * Set / overwrite the base file path
-     *
-     * @param $path
-     */
-    public function setBase($path)
-    {
-        $this->base = $path;
-    }
-
-    /**
      * Set / overwrite the path to the config file
      *
-     * @param $sourcePath
+     * @param $arrSourcePaths
      */
-    public function setConfigFile($sourcePath)
+    public function setConfigFiles($arrSourcePaths)
     {
-        if($strPath = $this->fileExists($sourcePath))
+        $this->msg('CSS-Config files', self::MSG_INFO . ' head');
+
+        foreach ($arrSourcePaths as $sourcePath)
         {
-            $this->configFile = $strPath;
-            $this->msg('<b>Base-Config:</b> ' . $strPath);
+            if($strPath = $this->fileExists($sourcePath))
+            {
+                $this->configFiles[] = $strPath;
+
+                $this->msg('Read file: ' . $strPath);
+            }
+            else
+            {
+                $this->msg('Could not found: ' . $strPath, self::MSG_ERROR);
+            }
         }
     }
 
@@ -445,13 +445,16 @@ class FileCompiler
 
                 $this->config = $strConfig;
 
-                $this->msg('<b>Theme-Config:</b> ' . $sourceField);
+                $this->msg('CSS-Config variables', self::MSG_INFO . ' head');
+                $this->msg('Column: ' . $sourceField);
             }
         }
     }
 
     /**
      * Return the parsed value
+     *
+     * @param $varValue
      *
      * @return string
      */
@@ -650,6 +653,8 @@ class FileCompiler
     /**
      * Return the file content
      *
+     * @param $filePath
+     *
      * @return string
      */
     public function getFileContent($filePath)
@@ -667,12 +672,12 @@ class FileCompiler
     private function fileExists($strFilePath)
     {
         // Check the source file
-        if (!file_exists(TL_ROOT . '/' . $this->base .  $strFilePath))
+        if (!file_exists(TL_ROOT . '/' . $strFilePath))
         {
             // Handle public bundle resources in web/
-            if (file_exists(TL_ROOT . '/' .  $this->webDir . '/' . $this->base .  $strFilePath))
+            if (file_exists(TL_ROOT . '/' .  $this->webDir . '/' . $strFilePath))
             {
-                return $this->webDir . '/' . $this->base .  $strFilePath;
+                return $this->webDir . '/' . $strFilePath;
             }
             else
             {
@@ -680,7 +685,7 @@ class FileCompiler
             }
         }
 
-        return $this->base . $strFilePath;
+        return $strFilePath;
     }
 
     /**
@@ -693,12 +698,12 @@ class FileCompiler
     private function dirExists($strDirPath)
     {
         // Check the source file
-        if (!is_dir(TL_ROOT . '/' . $this->base .  $strDirPath))
+        if (!is_dir(TL_ROOT . '/' . $strDirPath))
         {
             // Handle public bundle resources in web/
-            if (is_dir(TL_ROOT . '/' .  $this->webDir . '/' . $this->base .  $strDirPath))
+            if (is_dir(TL_ROOT . '/' .  $this->webDir . '/' . $strDirPath))
             {
-                return $this->webDir . '/' . $this->base .  $strDirPath;
+                return $this->webDir . '/' . $strDirPath;
             }
             else
             {
@@ -706,7 +711,7 @@ class FileCompiler
             }
         }
 
-        return $this->base . $strDirPath;
+        return $strDirPath;
     }
 
     /** Add an message

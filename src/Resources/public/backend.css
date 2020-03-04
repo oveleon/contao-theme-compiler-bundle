@@ -13,15 +13,17 @@
   color: #2a2a2a;
 }
 .tc_box > div + .head {
+  margin-top: 15px;
+}
+.tc_box > div.head {
   position: relative;
   font-family: Lato, sans-serif;
   color: #2a2a2a;
-  margin-top: 15px;
   padding: 9px 6px 8px 30px;
   border-bottom: 1px solid #e8e8e8;
   border-radius: 3px 3px 0 0;
 }
-.tc_box > div + .head:before {
+.tc_box > div.head:before {
   position: absolute;
   left: 6px;
   top: 7px;
