@@ -460,7 +460,7 @@ class FileCompiler
      */
     public function parseVariableValue($varValue)
     {
-        if(!$varValue)
+        if($varValue=='')
         {
             return $varValue;
         }
@@ -483,22 +483,22 @@ class FileCompiler
             {
                 $strValue = '';
 
-                if($varUnserialized['top'])
+                if($varUnserialized['top'] != '')
                 {
                     $strValue .= $varUnserialized['top'] . $varUnserialized['unit'] . ' ';
                 }
 
-                if($varUnserialized['top'] && $varUnserialized['right'])
+                if($varUnserialized['top'] != '' && $varUnserialized['right'] != '')
                 {
                     $strValue .= $varUnserialized['right'] . $varUnserialized['unit'] . ' ';
                 }
 
-                if($varUnserialized['top'] && $varUnserialized['right'] && $varUnserialized['bottom'])
+                if($varUnserialized['top'] != '' && $varUnserialized['right'] != '' && $varUnserialized['bottom'] != '')
                 {
                     $strValue .= $varUnserialized['bottom'] . $varUnserialized['unit'] . ' ';
                 }
 
-                if($varUnserialized['top'] && $varUnserialized['right'] && $varUnserialized['bottom'] && $varUnserialized['left'])
+                if($varUnserialized['top'] != '' && $varUnserialized['right'] != '' && $varUnserialized['bottom'] != '' && $varUnserialized['left'] != '')
                 {
                     $strValue .= $varUnserialized['left'] . $varUnserialized['unit'];
                 }
@@ -579,7 +579,7 @@ class FileCompiler
             }
 
             // top,right,bottom,left / unit
-            if(array_key_exists('top', $varValue) && (!$varValue['unit'] || !$varValue['top']))
+            if(array_key_exists('top', $varValue) && (!$varValue['unit'] || $varValue['top']==''))
             {
                 if(strpos($varValue['top'], '$') === 0)
                 {
@@ -590,7 +590,7 @@ class FileCompiler
             }
 
             // value / unit
-            if(array_key_exists('unit', $varValue) && !array_key_exists('top', $varValue) && (!$varValue['unit'] || !$varValue['value']))
+            if(array_key_exists('unit', $varValue) && !array_key_exists('top', $varValue) && (!$varValue['unit'] || $varValue['value']==''))
             {
                 if(strpos($varValue['value'], '$') === 0)
                 {
