@@ -68,3 +68,18 @@
     left: -4px;
   }
 }
+
+@media (max-width: 1279px) {
+
+  .split-button {
+    ul {
+      .themeCompileButton {
+
+        > img {
+          top: 3px;
+          left: -5px;
+        }
+      }
+    }
+  }
+}
