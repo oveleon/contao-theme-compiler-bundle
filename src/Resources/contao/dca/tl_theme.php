@@ -1,4 +1,8 @@
 <?php
+// Add compiler button
+$GLOBALS['TL_DCA']['tl_theme']['edit']['buttons_callback'][] = [Oveleon\ContaoThemeCompilerBundle\CompilerUtils::class, 'addSaveNCompileButton'];
+$GLOBALS['TL_DCA']['tl_theme']['config']['onsubmit_callback'][] = [Oveleon\ContaoThemeCompilerBundle\CompilerUtils::class, 'redirectMaintenanceAndCompile'];
+
 // Add operation
 $GLOBALS['TL_DCA']['tl_theme']['list']['operations']['compileConfig'] = array
 (

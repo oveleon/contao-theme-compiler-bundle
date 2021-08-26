@@ -58,3 +58,13 @@
     }
   }
 }
+
+.themeCompileButton {
+  border-color: #92c142;
+
+  > img {
+    position: relative;
+    top: -2px;
+    left: -4px;
+  }
+}

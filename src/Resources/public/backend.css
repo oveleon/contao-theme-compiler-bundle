@@ -50,4 +50,13 @@
   color: #3d883d;
 }
 
+.themeCompileButton {
+  border-color: #92c142;
+}
+.themeCompileButton > img {
+  position: relative;
+  top: -2px;
+  left: -4px;
+}
+
 /*# sourceMappingURL=backend.css.map */
