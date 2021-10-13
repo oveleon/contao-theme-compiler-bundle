@@ -2,9 +2,16 @@
 
 namespace Oveleon\ContaoThemeCompilerBundle;
 
+use Contao\Config;
+use Contao\File;
+use Contao\FilesModel;
+use Contao\StringUtil;
+use Contao\System;
+use Contao\ThemeModel;
+use ScssPhp\ScssPhp\CompilationResult;
 use ScssPhp\ScssPhp\Compiler;
-use ScssPhp\ScssPhp\Formatter\Compressed;
-use ScssPhp\ScssPhp\Formatter\Expanded;
+use ScssPhp\ScssPhp\Exception\SassException;
+use ScssPhp\ScssPhp\OutputStyle;
 
 /**
  * File Compiler
@@ -98,13 +105,13 @@ class FileCompiler
      */
     public function __construct($themeId)
     {
-        $this->objTheme = \ThemeModel::findById($themeId);
+        $this->objTheme = ThemeModel::findById($themeId);
 
         // Set web dir
-        $this->webDir = \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.web_dir'));
+        $this->webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
 
         // Set target directory
-        $objFile = \FilesModel::findByUuid($this->objTheme->outputFilesTargetDir);
+        $objFile = FilesModel::findByUuid($this->objTheme->outputFilesTargetDir);
 
         if($objFile !== null)
         {
@@ -159,7 +166,7 @@ class FileCompiler
 
             foreach ($this->files as $arrFile)
             {
-                $filename = \StringUtil::standardize($arrFile['name']);
+                $filename = StringUtil::standardize($arrFile['name']);
                 $content  = $this->getFileContent($arrFile['path']);
 
                 $this->msg('Compile file: ' . $arrFile['path']);
@@ -168,7 +175,7 @@ class FileCompiler
                 $this->importPaths[] = TL_ROOT . '/' . \dirname($arrFile['path']);
 
                 // Compile content and save file
-                $this->saveFile($this->compile($content), $filename);
+                $this->saveFile($this->compile($content)->getCss(), $filename);
             }
         }
     }
@@ -179,7 +186,7 @@ class FileCompiler
     public function compileSkinFiles()
     {
         $arrContent = array();
-        $skinFiles  = \StringUtil::deserialize($this->objTheme->skinSourceFiles);
+        $skinFiles  = StringUtil::deserialize($this->objTheme->skinSourceFiles);
 
         if($skinFiles !== null)
         {
@@ -187,7 +194,7 @@ class FileCompiler
 
             foreach ($skinFiles as $fileUuid)
             {
-                $file = \FilesModel::findByUuid($fileUuid);
+                $file = FilesModel::findByUuid($fileUuid);
 
                 if($file === null)
                 {
@@ -196,14 +203,14 @@ class FileCompiler
 
                 $this->msg('Compile file: ' . $file->path . '/' . $file->name);
 
-                $filename = \StringUtil::standardize(basename($file->name, $file->extension));
+                $filename = StringUtil::standardize(basename($file->name, $file->extension));
                 $content  = $this->getFileContent($file->path);
 
                 // Add default import path
                 $this->importPaths[] = TL_ROOT . '/' . \dirname($file->path);
 
                 // Compile content
-                $strCompiled =  $this->compile($content);
+                $strCompiled =  $this->compile($content)->getCss();
 
                 if(!!$this->objTheme->combineSkinFiles)
                 {
@@ -230,7 +237,7 @@ class FileCompiler
      *
      * @param $content
      *
-     * @return string
+     * @return CompilationResult
      */
     public function compile($content)
     {
@@ -238,7 +245,7 @@ class FileCompiler
         $objCompiler = new Compiler();
 
         // Set compiler formatter
-        $objCompiler->setFormatter((\Config::get('debugMode') ? Expanded::class : Compressed::class));
+        $objCompiler->setOutputStyle((Config::get('debugMode') ? OutputStyle::EXPANDED : OutputStyle::COMPRESSED));
 
         // Set import paths
         if($this->importPaths !== null)
@@ -271,7 +278,7 @@ class FileCompiler
         else
         {
             // Use global config variables
-            $arrVars    = \StringUtil::deserialize($this->objTheme->vars);
+            $arrVars    = StringUtil::deserialize($this->objTheme->vars);
             $globalVars = null;
 
             foreach ($arrVars as $var)
@@ -281,7 +288,7 @@ class FileCompiler
 
             if($globalVars !== null)
             {
-                $objCompiler->setVariables($globalVars);
+                $objCompiler->addVariables($globalVars);
             }
 
             //$objCompiler->getVariables();
@@ -289,10 +296,12 @@ class FileCompiler
 
         try
         {
-            $content = $objCompiler->compile($content);
+            $content = $objCompiler->compileString($content);
         }
         catch (\Exception $e)
         {
+            trigger_error($e->getMessage(), E_USER_ERROR);
+        } catch (SassException $e) {
             trigger_error($e->getMessage(), E_USER_ERROR);
         }
 
@@ -310,7 +319,7 @@ class FileCompiler
      */
     private function saveFile($content, $filename, $ext = self::FILE_EXT)
     {
-        $objFile = new \File($this->targetDir . '/' . $filename . $ext);
+        $objFile = new File($this->targetDir . '/' . $filename . $ext);
 
         if($this->objTheme->backupFiles && $objFile->exists())
         {
@@ -430,7 +439,7 @@ class FileCompiler
 
             if($configVars)
             {
-                $configVars = \StringUtil::deserialize($configVars, true);
+                $configVars = StringUtil::deserialize($configVars, true);
                 $strConfig  = '';
 
                 foreach ($configVars as $key => $varValue)
@@ -607,7 +616,7 @@ class FileCompiler
                     return [false, ''];
                 }
 
-                if(strpos($varValue[0], '$') === 0)
+                if(strpos($varValue[0] ?? '', '$') === 0)
                 {
                     return [false, $varValue[0]];
                 }

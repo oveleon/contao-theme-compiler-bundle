@@ -2,12 +2,18 @@
 
 namespace Oveleon\ContaoThemeCompilerBundle;
 
+use Contao\Backend;
+use Contao\BackendTemplate;
+use Contao\Environment;
+use Contao\Input;
+use Contao\ThemeModel;
+
 /**
  * Theme Compiler
  *
  * @author Daniele Sciannimanica <https://github.com/doishub>
  */
-class ThemeCompiler extends \Backend implements \executable
+class ThemeCompiler extends Backend implements \executable
 {
 	/**
 	 * Return true if the module is active
@@ -16,7 +22,7 @@ class ThemeCompiler extends \Backend implements \executable
 	 */
 	public function isActive()
 	{
-        return \Input::get('act') == 'compile';
+        return Input::get('act') == 'compile';
 	}
 
 	/**
@@ -27,15 +33,15 @@ class ThemeCompiler extends \Backend implements \executable
 	public function run()
 	{
 		/** @var BackendTemplate|object $objTemplate */
-		$objTemplate = new \BackendTemplate('be_theme_compiler');
-		$objTemplate->action = ampersand(\Environment::get('request'));
+		$objTemplate = new BackendTemplate('be_theme_compiler');
+		$objTemplate->action = ampersand(Environment::get('request'));
 		$objTemplate->headline = $GLOBALS['TL_LANG']['tl_maintenance']['themeCompiler'];
 		$objTemplate->isActive = $this->isActive();
 
         // Compile files
-        if (\Input::get('act') == 'compile')
+        if (Input::get('act') == 'compile')
         {
-            $intId = \Input::get('theme');
+            $intId = Input::get('theme');
 
             if($intId)
             {
@@ -71,7 +77,7 @@ class ThemeCompiler extends \Backend implements \executable
             return $objTemplate->parse();
         }
 
-        $objTheme = \ThemeModel::findAll();
+        $objTheme = ThemeModel::findAll();
         $arrThemes = array();
 
         if($objTheme !== null)
