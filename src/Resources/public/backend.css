@@ -2,11 +2,21 @@
   padding: 6px 15px 14px;
 }
 .tc_box > div {
-  font-family: "consolas", monospace;
-  padding: 6px;
+  position: relative;
+  padding: 6px 6px 6px 28px;
   margin-bottom: 2px;
-  background: #f9f9f9;
   color: #696969;
+}
+.tc_box > div:before {
+  position: absolute;
+  left: 3px;
+  top: 4px;
+  display: block;
+  content: "";
+  width: 18px;
+  height: 18px;
+  margin-right: 5px;
+  background: url("/bundles/contaothemecompiler/icons/attach.svg");
 }
 .tc_box > div b {
   font-family: Lato, sans-serif;
@@ -16,38 +26,36 @@
   margin-top: 15px;
 }
 .tc_box > div.head {
-  position: relative;
   font-family: Lato, sans-serif;
   color: #2a2a2a;
-  padding: 9px 6px 8px 30px;
+  padding: 9px 6px 8px 28px;
   border-bottom: 1px solid #e8e8e8;
   border-radius: 3px 3px 0 0;
+  margin-bottom: 6px;
 }
 .tc_box > div.head:before {
-  position: absolute;
-  left: 6px;
-  top: 7px;
-  display: block;
-  content: "";
-  width: 16px;
-  height: 16px;
-  margin-right: 5px;
-  background: url("/bundles/contaothemecompiler/icons/link.svg");
+  left: 0;
+  width: 24px;
+  height: 24px;
+  background: url("/bundles/contaothemecompiler/icons/gear.svg");
 }
 .tc_box > div.head {
   font-weight: 600;
 }
 .tc_box > div.tc_error {
-  background: #f1d9d4;
-  color: #883d3d;
+  color: #f23c00;
+}
+.tc_box > div.tc_error:before {
+  background: url("/bundles/contaothemecompiler/icons/file_error.svg");
 }
 .tc_box > div.tc_warn {
-  background: #f1d0ab;
   color: #88603d;
 }
 .tc_box > div.tc_success {
-  background: #dff1c7;
-  color: #3d883d;
+  color: #4cab4c;
+}
+.tc_box > div.tc_success:before {
+  background: url("/bundles/contaothemecompiler/icons/file_success.svg");
 }
 
 .themeCompileButton {

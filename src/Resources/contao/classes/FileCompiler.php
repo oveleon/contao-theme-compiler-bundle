@@ -30,6 +30,12 @@ class FileCompiler
      * The message info type
      * @var string
      */
+    const MSG_HEAD = 'tc_info head';
+
+    /**
+     * The message info type
+     * @var string
+     */
     const MSG_SUCCESS = 'tc_success';
 
     /**
@@ -144,6 +150,15 @@ class FileCompiler
                     break;
             }
         }
+
+        // Hook for custom methods
+        if (isset($GLOBALS['TC_HOOKS']['beforeCompile']) && \is_array($GLOBALS['TC_HOOKS']['beforeCompile']))
+        {
+            foreach ($GLOBALS['TC_HOOKS']['beforeCompile'] as $callback)
+            {
+                System::importStatic($callback[0])->{$callback[1]}($this);
+            }
+        }
     }
 
     /**
@@ -162,7 +177,7 @@ class FileCompiler
     {
         if($this->files !== null)
         {
-            $this->msg('Extension files', self::MSG_INFO . ' head');
+            $this->msg('Files', self::MSG_HEAD);
 
             foreach ($this->files as $arrFile)
             {
@@ -190,7 +205,7 @@ class FileCompiler
 
         if($skinFiles !== null)
         {
-            $this->msg('Skin files', self::MSG_INFO . ' head');
+            $this->msg('Skin files', self::MSG_HEAD);
 
             foreach ($skinFiles as $fileUuid)
             {
@@ -327,12 +342,18 @@ class FileCompiler
         }
 
         $objFile->truncate();
-        $objFile->write($content . "\n/** Compiled with Theme Compiler */");
+
+        if($objFile->write($content . "\n/** Compiled with Theme Compiler */"))
+        {
+            $this->msg('File saved: ' . $this->targetDir . '/' . $filename . $ext, self::MSG_SUCCESS);
+        }
+        else
+        {
+            $this->msg('File could not be saved: ' . $this->targetDir . '/' . $filename . $ext, self::MSG_ERROR);
+        }
 
         unset($content);
         $objFile->close();
-
-        $this->msg('File saved: ' . $this->targetDir . '/' . $filename . $ext, self::MSG_SUCCESS);
     }
 
     /**
@@ -409,7 +430,7 @@ class FileCompiler
      */
     public function setConfigFiles($arrSourcePaths)
     {
-        $this->msg('CSS-Config files', self::MSG_INFO . ' head');
+        $this->msg('Config', self::MSG_HEAD);
 
         foreach ($arrSourcePaths as $sourcePath)
         {
@@ -454,7 +475,7 @@ class FileCompiler
 
                 $this->config = $strConfig;
 
-                $this->msg('CSS-Config variables', self::MSG_INFO . ' head');
+                $this->msg('Config variables', self::MSG_HEAD);
                 $this->msg('Column: ' . $sourceField);
             }
         }
@@ -728,7 +749,7 @@ class FileCompiler
      * @param $message
      * @param string $type
      */
-    private function msg($message, $type = self::MSG_INFO)
+    public function msg($message, $type = self::MSG_INFO)
     {
         $this->messages[] = array(
             'message'  => $message,
