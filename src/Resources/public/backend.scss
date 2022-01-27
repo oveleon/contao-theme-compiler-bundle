@@ -57,7 +57,11 @@
     }
 
     &.tc_warn{
-      color: #88603d;
+      color: #f88639;
+
+      &:before{
+        background: url("/bundles/contaothemecompiler/icons/file_warning.svg");
+      }
     }
 
     &.tc_success{

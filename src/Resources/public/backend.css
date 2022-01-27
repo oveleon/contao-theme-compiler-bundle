@@ -49,7 +49,10 @@
   background: url("/bundles/contaothemecompiler/icons/file_error.svg");
 }
 .tc_box > div.tc_warn {
-  color: #88603d;
+  color: #f88639;
+}
+.tc_box > div.tc_warn:before {
+  background: url("/bundles/contaothemecompiler/icons/file_warning.svg");
 }
 .tc_box > div.tc_success {
   color: #4cab4c;

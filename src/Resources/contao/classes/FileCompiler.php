@@ -475,7 +475,8 @@ class FileCompiler
 
                 $this->config = $strConfig;
 
-                $this->msg('Config variables', self::MSG_HEAD);
+                $this->msg('Config Variables', self::MSG_HEAD);
+                $this->msg('Theme: ' . $this->objTheme->name);
                 $this->msg('Column: ' . $sourceField);
             }
         }
