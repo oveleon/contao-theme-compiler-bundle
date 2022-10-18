@@ -178,7 +178,7 @@ class FileCompiler
      */
     public function compileSkinFiles(): void
     {
-        $arrContent = array();
+        $arrContent = [];
         $skinFiles  = StringUtil::deserialize($this->objTheme->skinSourceFiles);
 
         if (null !== $skinFiles)
@@ -497,7 +497,7 @@ class FileCompiler
             // handle a keyValue field
             elseif (isset($varUnserialized[0]['key']) && isset($varUnserialized[0]['value']))
             {
-                $arrList = array();
+                $arrList = [];
 
                 foreach ($varUnserialized as $ind => $opts)
                 {
@@ -601,7 +601,7 @@ class FileCompiler
      */
     protected function convertHexColor(string $color): array
     {
-        $rgb = array();
+        $rgb = [];
 
         // Try to convert using bitwise operation
         if (\strlen($color) == 6)
@@ -682,16 +682,14 @@ class FileCompiler
      */
     public function msg($message, string $type = self::MSG_INFO): void
     {
-        $this->messages[] = array(
+        $this->messages[] = [
             'message'  => $message,
             'type'     => $type
-        );
+        ];
     }
 
     /**
      * Returns all messages
-     *
-     * @return array
      */
     public function getMessages(): array
     {

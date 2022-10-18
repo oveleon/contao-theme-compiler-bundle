@@ -73,15 +73,6 @@ class tl_theme_compiler extends \Backend
 
     /**
      * Return the "import theme" link
-     *
-     * @param string $row
-     * @param string $href
-     * @param string $label
-     * @param string $title
-     * @param string $icon
-     * @param string $attributes
-     *
-     * @return string
      */
     public function compileThemeStyles($row, string $href, string $label, string $title, string $icon, string $attributes): string
     {

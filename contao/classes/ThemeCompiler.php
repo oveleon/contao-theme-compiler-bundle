@@ -55,7 +55,7 @@ class ThemeCompiler extends Backend implements executable
                     $compiler->compileAll();
 
                     $arrMessages = $compiler->getMessages();
-                    $messages = array();
+                    $messages = [];
 
                     foreach ($arrMessages as $arrMessage) {
                         $messages[] = '<div class="'. $arrMessage['type'] .'">' . $arrMessage['message'] . '</div>';
@@ -82,7 +82,7 @@ class ThemeCompiler extends Backend implements executable
         }
 
         $objTheme = ThemeModel::findAll();
-        $arrThemes = array();
+        $arrThemes = [];
 
         if ($objTheme !== null)
         {
