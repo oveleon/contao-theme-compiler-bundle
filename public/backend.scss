@@ -1,13 +1,15 @@
-.tc_box{
+$themeCompilerPath: '/bundles/contaothemecompiler/';
+
+.tc_box {
   padding: 6px 15px 14px;
 
-  > div{
+  > div {
     position: relative;
     padding: 6px 6px 6px 28px;
     margin-bottom: 2px;
     color: #696969;
 
-    &:before{
+    &:before {
       position: absolute;
       left: 3px;
       top: 4px;
@@ -16,19 +18,19 @@
       width: 18px;
       height: 18px;
       margin-right: 5px;
-      background: url("/bundles/contaothemecompiler/icons/attach.svg");
+      background: url($themeCompilerPath + "icons/attach.svg");
     }
 
-    b{
+    b {
       font-family: Lato,sans-serif;
       color: #2a2a2a;
     }
 
-    + .head{
+    + .head {
       margin-top: 15px;
     }
 
-    &.head{
+    &.head {
       font-family: Lato,sans-serif;
       color: #2a2a2a;
       padding: 9px 6px 8px 28px;
@@ -36,39 +38,39 @@
       border-radius: 3px 3px 0 0;
       margin-bottom: 6px;
 
-      &:before{
+      &:before {
         left: 0;
         width: 24px;
         height: 24px;
-        background: url("/bundles/contaothemecompiler/icons/gear.svg");
+        background: url($themeCompilerPath + "icons/gear.svg");
       }
     }
 
-    &.head{
+    &.head {
       font-weight: 600;
     }
 
-    &.tc_error{
+    &.tc_error {
       color: #f23c00;
 
-      &:before{
-        background: url("/bundles/contaothemecompiler/icons/file_error.svg");
+      &:before {
+        background: url($themeCompilerPath + "icons/file_error.svg");
       }
     }
 
-    &.tc_warn{
+    &.tc_warn {
       color: #f88639;
 
-      &:before{
-        background: url("/bundles/contaothemecompiler/icons/file_warning.svg");
+      &:before {
+        background: url($themeCompilerPath + "icons/file_warning.svg");
       }
     }
 
-    &.tc_success{
+    &.tc_success {
       color: #4cab4c;
 
-      &:before{
-        background: url("/bundles/contaothemecompiler/icons/file_success.svg");
+      &:before {
+        background: url($themeCompilerPath + "icons/file_success.svg");
       }
     }
   }
@@ -87,7 +89,9 @@
 @media (max-width: 1279px) {
 
   .split-button {
+
     ul {
+
       .themeCompileButton {
 
         > img {

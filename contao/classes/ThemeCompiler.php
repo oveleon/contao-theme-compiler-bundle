@@ -1,49 +1,53 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao Theme Compiler Bundle.
+ *
+ * @package     contao-theme-compiler-bundle
+ * @license     MIT
+ * @author      Daniele Sciannimanica  <https://github.com/doishub>
+ * @copyright   Oveleon                <https://www.oveleon.de/>
+ */
+
 namespace Oveleon\ContaoThemeCompilerBundle;
 
 use Contao\Backend;
 use Contao\BackendTemplate;
 use Contao\Environment;
 use Contao\Input;
+use Contao\StringUtil;
 use Contao\ThemeModel;
+use executable;
 
-/**
- * Theme Compiler
- *
- * @author Daniele Sciannimanica <https://github.com/doishub>
- */
-class ThemeCompiler extends Backend implements \executable
+class ThemeCompiler extends Backend implements executable
 {
 	/**
 	 * Return true if the module is active
-	 *
-	 * @return boolean
 	 */
-	public function isActive()
-	{
+	public function isActive(): bool
+    {
         return Input::get('act') == 'compile';
 	}
 
 	/**
 	 * Generate the module
-	 *
-	 * @return string
 	 */
-	public function run()
-	{
+	public function run(): string
+    {
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new BackendTemplate('be_theme_compiler');
-		$objTemplate->action = ampersand(Environment::get('request'));
-		$objTemplate->headline = $GLOBALS['TL_LANG']['tl_maintenance']['themeCompiler'];
+		$objTemplate->action = StringUtil::ampersand(Environment::get('request'));
+		$objTemplate->headline = $GLOBALS['TL_LANG']['tl_maintenance']['themeCompiler'] ?? null;
 		$objTemplate->isActive = $this->isActive();
 
         // Compile files
-        if (Input::get('act') == 'compile')
+        if ('compile' == Input::get('act'))
         {
             $intId = Input::get('theme');
 
-            if($intId)
+            if ($intId)
             {
                 try
                 {
@@ -61,17 +65,17 @@ class ThemeCompiler extends Backend implements \executable
                 }
                 catch(\Exception $e)
                 {
-                    $objTemplate->class= 'tl_error';
+                    $objTemplate->class = 'tl_error';
                     $objTemplate->explain = $e->getMessage();
                 }
             }
             else
             {
                 $objTemplate->class= 'tl_error';
-                $objTemplate->explain = $GLOBALS['TL_LANG']['tl_maintenance']['themeCompilerNoTheme'];
+                $objTemplate->explain = $GLOBALS['TL_LANG']['tl_maintenance']['themeCompilerNoTheme'] ?? null;
             }
 
-            $objTemplate->indexContinue = $GLOBALS['TL_LANG']['MSC']['continue'];
+            $objTemplate->indexContinue = $GLOBALS['TL_LANG']['MSC']['continue'] ?? null;
             $objTemplate->isRunning = true;
 
             return $objTemplate->parse();
@@ -80,17 +84,17 @@ class ThemeCompiler extends Backend implements \executable
         $objTheme = ThemeModel::findAll();
         $arrThemes = array();
 
-        if($objTheme !== null)
+        if ($objTheme !== null)
         {
-            while($objTheme->next())
+            while ($objTheme->next())
             {
                 $arrThemes[ $objTheme->id ] = $objTheme->name;
             }
         }
 
         $objTemplate->themes = $arrThemes;
-        $objTemplate->themesDescription = $GLOBALS['TL_LANG']['tl_maintenance']['themeCompilerThemePicker'];
-        $objTemplate->submit = $GLOBALS['TL_LANG']['tl_maintenance']['themeCompilerCompile'];
+        $objTemplate->themesDescription = $GLOBALS['TL_LANG']['tl_maintenance']['themeCompilerThemePicker'] ?? null;
+        $objTemplate->submit = $GLOBALS['TL_LANG']['tl_maintenance']['themeCompilerCompile'] ?? null;
 
 		return $objTemplate->parse();
 	}

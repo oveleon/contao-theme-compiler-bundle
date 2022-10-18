@@ -1,39 +1,49 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_theme.php" source-language="en">
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_theme.php" source-language="en" target-language="de">
     <body>
       <trans-unit id="tl_theme.compiler_legend">
         <source>Theme-Compiler</source>
+        <target>Theme-Compiler</target>
       </trans-unit>
       <trans-unit id="tl_theme.skinSourceFiles.0">
         <source>Skin source files</source>
+        <target>Skin-Quelldateien</target>
       </trans-unit>
       <trans-unit id="tl_theme.skinSourceFiles.1">
         <source>Select the files to compile and their order here.</source>
+        <target>Wählen Sie hier die zu kompilierenden Dateien und dessen Reihenfolge aus.</target>
       </trans-unit>
       <trans-unit id="tl_theme.combineSkinFiles.0">
         <source>Combine skin source files</source>
+        <target>Skin-Quelldateien zusammenfassen</target>
       </trans-unit>
       <trans-unit id="tl_theme.combineSkinFiles.1">
-        <source>Combines all skin source files. Otherwise all files will be stored separately.</source>
+        <source>Combines all skin source files. Otherwise, all selected files will be stored separately.</source>
+        <target>Kombiniert alle Skin-Quelldateien. Andernfalls werden alle gewählten Dateien einzeln abgelegt.</target>
       </trans-unit>
       <trans-unit id="tl_theme.backupFiles.0">
         <source>Create backup files</source>
+        <target>Backup-Dateien anlegen</target>
       </trans-unit>
       <trans-unit id="tl_theme.backupFiles.1">
         <source>Copies existing files to a subfolder of the destination before compilation to be able to restore them later.</source>
+        <target>Kopiert bestehende Dateien vor dem kompilieren in einen Unterorder des Zielorts um diese später wiederherstellen zu können.</target>
       </trans-unit>
       <trans-unit id="tl_theme.outputFilesTargetDir.0">
         <source>Target-Directory</source>
+        <target>Zielort</target>
       </trans-unit>
       <trans-unit id="tl_theme.outputFilesTargetDir.1">
         <source>Specify the location where the compiled file(s) should be stored.</source>
+        <target>Geben Sie hier an, an welchem Ort die kompilierte/n Datei/en abgelegt werden soll.</target>
       </trans-unit>
       <trans-unit id="tl_theme.compileConfig.0">
         <source>Compile theme files</source>
+        <target>Theme-Dateien kompilieren</target>
       </trans-unit>
       <trans-unit id="tl_theme.compileConfig.1">
         <source>Compile theme files</source>
+        <target>Theme-Dateien kompilieren</target>
       </trans-unit>
     </body>
   </file>
