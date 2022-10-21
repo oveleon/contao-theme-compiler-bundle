@@ -76,6 +76,6 @@ class tl_theme_compiler extends \Backend
      */
     public function compileThemeStyles($row, string $href, string $label, string $title, string $icon, string $attributes): string
     {
-        return '<a href="' . $this->addToUrl($href)  . '&amp;theme=' . $row['id'] . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a>';
+        return '<a href="' . $this->addToUrl($href)  . '&amp;theme=' . $row['id'] . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
     }
 }
