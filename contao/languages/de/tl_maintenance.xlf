@@ -17,6 +17,10 @@
         <source>No theme selected.</source>
         <target>Es wurde kein Theme ausgewählt.</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance.themeCompilerNoConfiguration">
+        <source>No configuration could be found.</source>
+        <target>Es konnte keine Konfiguration gefunden werden.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

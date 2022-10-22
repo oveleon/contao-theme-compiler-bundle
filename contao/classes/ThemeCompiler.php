@@ -55,10 +55,17 @@ class ThemeCompiler extends Backend implements executable
                     $compiler->compileAll();
 
                     $arrMessages = $compiler->getMessages();
-                    $messages = [];
 
-                    foreach ($arrMessages as $arrMessage) {
-                        $messages[] = '<div class="'. $arrMessage['type'] .'">' . $arrMessage['message'] . '</div>';
+                    if (empty($arrMessages))
+                    {
+                        $messages[] = '<div class="'. 'MSG_ERROR' .'">' . $GLOBALS['TL_LANG']['tl_maintenance']['themeCompilerNoConfiguration'] ?? null . '</div>';
+                    }
+                    else {
+                        $messages = [];
+
+                        foreach ($arrMessages as $arrMessage) {
+                            $messages[] = '<div class="'. $arrMessage['type'] .'">' . $arrMessage['message'] . '</div>';
+                        }
                     }
 
                     $objTemplate->logs = implode("", $messages);

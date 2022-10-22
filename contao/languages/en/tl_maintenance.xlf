@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><xliff version="1.1">
+<?xml version="1.0" ?><xliff version="1.1">
   <file datatype="php" original="contao/languages/en/tl_maintenance.php" source-language="en">
     <body>
       <trans-unit id="tl_maintenance.themeCompiler">
@@ -12,6 +12,9 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.themeCompilerNoTheme">
         <source>No theme selected.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.themeCompilerNoConfiguration">
+        <source>No configuration could be found.</source>
       </trans-unit>
     </body>
   </file>
