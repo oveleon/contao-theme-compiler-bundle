@@ -50,7 +50,7 @@ class FileCompiler
     /**
      * Configuration fields from custom table field in tl_theme
      */
-    protected string $config;
+    protected ?string $config = null;
 
     /**
      * Files to combine
@@ -75,7 +75,7 @@ class FileCompiler
     /**
      * Messages
      */
-    protected array $messages;
+    protected ?array $messages = [];
 
     /**
      * Root directory
@@ -675,7 +675,7 @@ class FileCompiler
         return $strDirPath;
     }
 
-    /** Add an message
+    /** Add messages
      *
      * @param $message
      * @param string $type
