@@ -5,6 +5,7 @@ The contao theme compiler bundle adds the functionality to compile selected scss
 + [Features](#features)
 + [How to install](#how-to-install-the-package)
 + [Initial setup](#initial-setup)
++ [Console commands](#console-commands)
 
 ## Features
 
@@ -42,7 +43,28 @@ Search for contao theme compiler bundle and add it to your extensions.
    ![Admin View: Advanced form overview](https://www.oveleon.de/share/github-assets/contao-theme-compiler-bundle/themeSettings.jpg)
 
 
-5. Compile in your theme-settings, within your theme overview or under maintenance
+5. Compile in your theme-settings, within your theme overview, under maintenance or via console command
 
    ![Admin View: Advanced form overview](https://www.oveleon.de/share/github-assets/contao-theme-compiler-bundle/themeOverview.jpg)
    ![Admin View: Advanced form overview](https://www.oveleon.de/share/github-assets/contao-theme-compiler-bundle/maintenanceSettings.jpg)
+
+   ```
+   php vendor/bin/contao-console contao:themecompiler:compile [id]
+   ```
+   
+## Console commands
+
+### List themes
+
+- Output a list your of your themes within ``tl_theme``
+
+```
+php vendor/bin/contao-console contao:themecompiler:list
+```
+
+### Compile theme
+
+- Compile a theme with following command ([id] is mandatory):
+```
+php vendor/bin/contao-console contao:themecompiler:compile [id]
+```
