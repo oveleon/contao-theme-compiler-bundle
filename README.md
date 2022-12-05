@@ -51,12 +51,12 @@ Search for contao theme compiler bundle and add it to your extensions.
    ```
    php vendor/bin/contao-console contao:themecompiler:compile [id]
    ```
-   
+
 ## Console commands
 
 ### List themes
 
-- Output a list your of your themes within ``tl_theme``
+- Outputs a list of your themes within ``tl_theme``
 
 ```
 php vendor/bin/contao-console contao:themecompiler:list
@@ -64,7 +64,7 @@ php vendor/bin/contao-console contao:themecompiler:list
 
 ### Compile theme
 
-- Compile a theme with following command ([id] is mandatory):
+- Compiles a theme ([id] is mandatory):
 ```
 php vendor/bin/contao-console contao:themecompiler:compile [id]
 ```
