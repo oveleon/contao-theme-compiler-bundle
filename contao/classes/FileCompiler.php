@@ -416,6 +416,15 @@ class FileCompiler
             if ($configVars)
             {
                 $configVars = StringUtil::deserialize($configVars, true);
+
+                if (isset($GLOBALS['TC_HOOKS']['compilerParseConfig']) && \is_array($GLOBALS['TC_HOOKS']['compilerParseConfig']))
+                {
+                    foreach ($GLOBALS['TC_HOOKS']['compilerParseConfig'] as $callback)
+                    {
+                        System::importStatic($callback[0])->{$callback[1]}($this, $configVars);
+                    }
+                }
+
                 $strConfig  = '';
 
                 foreach ($configVars as $key => $varValue)
