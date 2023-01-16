@@ -531,12 +531,11 @@ class FileCompiler
             return '#' . $varValue;
         }
 
-        if (isset($GLOBALS['TL_HOOKS']['compilerParseVariableValue']) && \is_array($GLOBALS['TL_HOOKS']['compilerParseVariableValue']))
+        if (isset($GLOBALS['TC_HOOKS']['compilerParseVariableValue']) && \is_array($GLOBALS['TC_HOOKS']['compilerParseVariableValue']))
         {
-            foreach ($GLOBALS['TL_HOOKS']['compilerParseVariableValue'] as $callback)
+            foreach ($GLOBALS['TC_HOOKS']['compilerParseVariableValue'] as $callback)
             {
-                $this->import($callback[0]);
-                $varValue = $this->{$callback[0]}->{$callback[1]}($varValue);
+                System::importStatic($callback[0])->{$callback[1]}($this, $varValue);
             }
         }
 
