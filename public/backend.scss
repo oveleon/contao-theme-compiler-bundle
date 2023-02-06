@@ -66,6 +66,14 @@ $themeCompilerPath: '/bundles/contaothemecompiler/';
       }
     }
 
+    &.tc_note {
+      color: #2c8ec7;
+
+      &:before {
+        background: url($themeCompilerPath + "icons/file_note.svg");
+      }
+    }
+
     &.tc_success {
       color: #4cab4c;
 

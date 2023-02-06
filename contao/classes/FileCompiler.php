@@ -35,6 +35,7 @@ class FileCompiler
     const MSG_SUCCESS = 'tc_success';
     const MSG_WARN = 'tc_warn';
     const MSG_ERROR = 'tc_error';
+    const MSG_NOTE = 'tc_note';
     const FILE_EXT = '.css';
 
     /**

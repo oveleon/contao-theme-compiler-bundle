@@ -85,6 +85,10 @@ class ThemeCompileCommand extends Command
                             $io->warning($message);
                             break;
 
+                        case FileCompiler::MSG_NOTE:
+                            $io->note($message);
+                            break;
+
                         case FileCompiler::MSG_SUCCESS:
                             $io->success($message);
                             break;
