@@ -36,7 +36,6 @@ class ThemeListCommand extends Command
     public function __construct(ContaoFramework $contaoFramework)
     {
         $this->framework = $contaoFramework;
-        $this->framework->initialize();
 
         parent::__construct();
     }
