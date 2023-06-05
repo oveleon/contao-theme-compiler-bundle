@@ -10,15 +10,9 @@
  */
 
 // Maintenance
-$GLOBALS['TL_MAINTENANCE'][] = '\\Oveleon\\ContaoThemeCompilerBundle\\ThemeCompiler';
+use Oveleon\ContaoThemeCompilerBundle\Compiler\ThemeCompiler;
+
+$GLOBALS['TL_MAINTENANCE'][] = ThemeCompiler::class;
 
 // Theme-Compiler sources
 $GLOBALS['TC_SOURCES'] = [];
-
-// Add backend stylesheet
-$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
-{
-    $GLOBALS['TL_CSS'][] = 'bundles/contaothemecompiler/backend.css|static';
-}

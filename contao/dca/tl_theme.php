@@ -11,16 +11,18 @@ declare(strict_types=1);
  * @copyright   Oveleon                <https://www.oveleon.de/>
  */
 
-// Add compiler button
-$GLOBALS['TL_DCA']['tl_theme']['edit']['buttons_callback'][]    = [Oveleon\ContaoThemeCompilerBundle\CompilerUtils::class, 'addSaveNCompileButton'];
-$GLOBALS['TL_DCA']['tl_theme']['config']['onsubmit_callback'][] = [Oveleon\ContaoThemeCompilerBundle\CompilerUtils::class, 'redirectMaintenanceAndCompile'];
+use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Oveleon\ContaoThemeCompilerBundle\Utils\CompilerUtils;
+
+$GLOBALS['TL_DCA']['tl_theme']['edit']['buttons_callback'][]    = [CompilerUtils::class, 'addSaveNCompileButton'];
+$GLOBALS['TL_DCA']['tl_theme']['config']['onsubmit_callback'][] = [CompilerUtils::class, 'redirectMaintenanceAndCompile'];
 
 // Add operation
 $GLOBALS['TL_DCA']['tl_theme']['list']['operations']['compileConfig'] = [
     'label'           => &$GLOBALS['TL_LANG']['tl_theme']['compileConfig'],
     'href'            => 'act=compile&do=maintenance',
     'icon'            => 'bundles/contaothemecompiler/icons/compile.svg',
-    'button_callback' => ['tl_theme_compiler', 'compileThemeStyles']
+    'button_callback' => [CompilerUtils::class, 'addCompileThemeButton']
 ];
 
 // Add fields
@@ -55,27 +57,7 @@ $GLOBALS['TL_DCA']['tl_theme']['fields']['backupFiles'] = [
 ];
 
 // Extend the default palette
-Contao\CoreBundle\DataContainer\PaletteManipulator::create()
-    ->addLegend('compiler_legend', 'vars_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
-    ->addField(['skinSourceFiles', 'outputFilesTargetDir', 'combineSkinFiles', 'backupFiles'], 'compiler_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
+PaletteManipulator::create()
+    ->addLegend('compiler_legend', 'vars_legend', PaletteManipulator::POSITION_BEFORE)
+    ->addField(['skinSourceFiles', 'outputFilesTargetDir', 'combineSkinFiles', 'backupFiles'], 'compiler_legend', PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('default', 'tl_theme');
-
-class tl_theme_compiler extends \Backend
-{
-    /**
-     * Import the back end user object
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->import(BackendUser::class, 'User');
-    }
-
-    /**
-     * Return the "import theme" link
-     */
-    public function compileThemeStyles($row, string $href, string $label, string $title, string $icon, string $attributes): string
-    {
-        return '<a href="' . $this->addToUrl($href)  . '&amp;theme=' . $row['id'] . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
-    }
-}

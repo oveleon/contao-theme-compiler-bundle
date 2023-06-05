@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Oveleon\ContaoThemeCompilerBundle\Command;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Oveleon\ContaoThemeCompilerBundle\FileCompiler;
+use Oveleon\ContaoThemeCompilerBundle\Compiler\FileCompiler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,7 +36,6 @@ class ThemeCompileCommand extends Command
     public function __construct(ContaoFramework $contaoFramework)
     {
         $this->framework = $contaoFramework;
-        $this->framework->initialize();
 
         parent::__construct();
     }
