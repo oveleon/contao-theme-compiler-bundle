@@ -1,56 +1,59 @@
 {
-    "name": "oveleon/contao-theme-compiler-bundle",
-    "type": "contao-bundle",
-    "description": "Theme-Compiler for Theme-Manager Bundles",
-    "license": "MIT",
-    "keywords": ["contao", "compiler"],
-    "homepage": "https://www.oveleon.de/",
-    "authors": [
-        {
-            "name": "Oveleon",
-            "homepage": "https://oveleon.de/",
-            "role": "Developer"
-        },
-        {
-            "name": "Daniele Sciannimanica",
-            "homepage": "https://github.com/doishub",
-            "role": "Developer"
-        }
-    ],
-    "require": {
-        "php": "^8.0",
-        "contao/core-bundle": "^4.9",
-        "scssphp/scssphp": "^1.8"
+  "name": "oveleon/contao-theme-compiler-bundle",
+  "type": "contao-bundle",
+  "description": "Theme-Compiler for Theme-Manager Bundles",
+  "license": "MIT",
+  "keywords": [
+    "contao",
+    "compiler"
+  ],
+  "homepage": "https://www.oveleon.de/",
+  "authors": [
+    {
+      "name": "Oveleon",
+      "homepage": "https://oveleon.de/",
+      "role": "Developer"
     },
-    "require-dev": {
-        "contao/manager-plugin": "^2.3.1"
-    },
-    "conflict": {
-        "contao/core": "*",
-        "contao/manager-plugin": "<2.0 || >=3.0"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.4.x-dev"
-        },
-        "contao-manager-plugin": "Oveleon\\ContaoThemeCompilerBundle\\ContaoManager\\Plugin"
-    },
-    "autoload": {
-        "psr-4": {
-            "Oveleon\\ContaoThemeCompilerBundle\\": "src/"
-        },
-        "classmap": [
-            "contao/"
-        ],
-        "exclude-from-classmap": [
-            "contao/config/",
-            "contao/dca/",
-            "contao/languages/",
-            "contao/templates/"
-        ]
-    },
-    "support": {
-        "issues": "https://github.com/oveleon/contao-theme-compiler-bundle/issues",
-        "source": "https://github.com/oveleon/contao-theme-compiler-bundle"
+    {
+      "name": "Daniele Sciannimanica",
+      "homepage": "https://github.com/doishub",
+      "role": "Developer"
     }
+  ],
+  "require": {
+    "php": "^8.1",
+    "contao/core-bundle": "^4.13 || ^5.1",
+    "scssphp/scssphp": "^1.8"
+  },
+  "require-dev": {
+    "contao/manager-plugin": "^2.3.1"
+  },
+  "conflict": {
+    "contao/core": "*",
+    "contao/manager-plugin": "<2.0 || >=3.0"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-main": "1.5.x-dev"
+    },
+    "contao-manager-plugin": "Oveleon\\ContaoThemeCompilerBundle\\ContaoManager\\Plugin"
+  },
+  "autoload": {
+    "psr-4": {
+      "Oveleon\\ContaoThemeCompilerBundle\\": "src/"
+    },
+    "classmap": [
+      "contao/"
+    ],
+    "exclude-from-classmap": [
+      "contao/config/",
+      "contao/dca/",
+      "contao/languages/",
+      "contao/templates/"
+    ]
+  },
+  "support": {
+    "issues": "https://github.com/oveleon/contao-theme-compiler-bundle/issues",
+    "source": "https://github.com/oveleon/contao-theme-compiler-bundle"
+  }
 }
