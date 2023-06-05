@@ -9,7 +9,7 @@
  * @copyright   Oveleon                <https://www.oveleon.de/>
  */
 
-namespace Oveleon\ContaoThemeCompilerBundle;
+namespace Oveleon\ContaoThemeCompilerBundle\Compiler;
 
 use Contao\Config;
 use Contao\File;
@@ -88,12 +88,13 @@ class FileCompiler
      */
     public function __construct($themeId)
     {
-        $this->rootDir = System::getContainer()->getParameter('kernel.project_dir');
+        $container = System::getContainer();
 
+        $this->rootDir  = $container->getParameter('kernel.project_dir');
         $this->objTheme = ThemeModel::findById($themeId);
 
         // Set web dir
-        $this->webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
+        $this->webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
         // Set target directory
         $objFile = FilesModel::findByUuid($this->objTheme->outputFilesTargetDir);

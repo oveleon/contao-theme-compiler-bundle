@@ -11,17 +11,18 @@ declare(strict_types=1);
  * @copyright   Oveleon                <https://www.oveleon.de/>
  */
 
-namespace Oveleon\ContaoThemeCompilerBundle;
+namespace Oveleon\ContaoThemeCompilerBundle\Compiler;
 
 use Contao\Backend;
 use Contao\BackendTemplate;
 use Contao\Environment;
 use Contao\Input;
+use Contao\MaintenanceModuleInterface;
 use Contao\StringUtil;
+use Contao\System;
 use Contao\ThemeModel;
-use executable;
 
-class ThemeCompiler extends Backend implements executable
+class ThemeCompiler extends Backend implements MaintenanceModuleInterface
 {
 	/**
 	 * Return true if the module is active
@@ -102,6 +103,7 @@ class ThemeCompiler extends Backend implements executable
         $objTemplate->themes = $arrThemes;
         $objTemplate->themesDescription = $GLOBALS['TL_LANG']['tl_maintenance']['themeCompilerThemePicker'] ?? null;
         $objTemplate->submit = $GLOBALS['TL_LANG']['tl_maintenance']['themeCompilerCompile'] ?? null;
+        $objTemplate->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 
 		return $objTemplate->parse();
 	}

@@ -11,15 +11,21 @@ declare(strict_types=1);
  * @copyright   Oveleon                <https://www.oveleon.de/>
  */
 
-namespace Oveleon\ContaoThemeCompilerBundle;
+namespace Oveleon\ContaoThemeCompilerBundle\Utils;
 
 use Contao\Backend;
 use Contao\DataContainer;
 use Contao\Image;
+use Contao\StringUtil;
 use Contao\System;
 
 class CompilerUtils extends Backend
 {
+    public function addCompileThemeButton($row, string $href, string $label, string $title, string $icon, string $attributes): string
+    {
+        return '<a href="' . $this->addToUrl($href)  . '&amp;theme=' . $row['id'] . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
+    }
+
 	/**
 	 * Add save and compile button
 	 */
@@ -39,11 +45,13 @@ class CompilerUtils extends Backend
 	{
 		if (isset($_POST['saveNcompile']))
 		{
+            $container = System::getContainer();
+
 			// Generate the link to compile the theme
-			$strUrl = System::getContainer()->get('router')->generate('contao_backend', [
+			$strUrl = $container->get('router')->generate('contao_backend', [
                 'do'    => 'maintenance',
                 'act'   => 'compile',
-                'rt'    => REQUEST_TOKEN,
+                'rt'    => $container->get('contao.csrf.token_manager')->getDefaultTokenValue(),
                 'theme' => $dc->id
             ]);
 
