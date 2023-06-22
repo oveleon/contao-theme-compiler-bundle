@@ -41,7 +41,7 @@ class FileCompiler
     /**
      * Theme Object
      */
-    protected null|ThemeModel $objTheme;
+    public null|ThemeModel $objTheme;
 
     /**
      * Source path to config
