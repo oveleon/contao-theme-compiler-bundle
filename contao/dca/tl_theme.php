@@ -30,7 +30,7 @@ $GLOBALS['TL_DCA']['tl_theme']['fields']['skinSourceFiles'] = [
     'label'           => &$GLOBALS['TL_LANG']['tl_theme']['skinSourceFiles'],
     'exclude'         => true,
     'inputType'       => 'fileTree',
-    'eval'            => ['multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'extensions'=>'css,scss,less'],
+    'eval'            => ['multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'extensions'=>'css,scss,less', 'isSortable'=>true],
     'sql'             => "blob NULL"
 ];
 
