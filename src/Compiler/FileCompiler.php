@@ -204,7 +204,7 @@ class FileCompiler
                     continue;
                 }
 
-                $this->msg('Compile file: ' . $file->path . '/' . $file->name);
+                $this->msg('Compile file: ' . $file->path);
 
                 $filename = StringUtil::standardize(basename($file->name, $file->extension));
                 $content  = $this->getFileContent($file->path);
