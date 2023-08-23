@@ -84,6 +84,11 @@ class FileCompiler
     protected string $rootDir;
 
     /**
+     * Custom skin files
+     */
+    public array $customSkinFiles = [];
+
+    /**
      * FileCompiler constructor.
      */
     public function __construct($themeId)
@@ -181,9 +186,9 @@ class FileCompiler
     public function compileSkinFiles(): void
     {
         $arrContent = [];
-        $skinFiles  = StringUtil::deserialize($this->objTheme->skinSourceFiles);
+        $skinFiles = array_merge($this->customSkinFiles, StringUtil::deserialize($this->objTheme->skinSourceFiles, true));
 
-        if (null !== $skinFiles)
+        if (!empty($skinFiles))
         {
             // reverse loading order so following skin files will override configurations from previous ones
             $skinFiles = array_reverse($skinFiles);
@@ -199,7 +204,7 @@ class FileCompiler
                     continue;
                 }
 
-                $this->msg('Compile file: ' . $file->path . '/' . $file->name);
+                $this->msg('Compile file: ' . $file->path);
 
                 $filename = StringUtil::standardize(basename($file->name, $file->extension));
                 $content  = $this->getFileContent($file->path);
