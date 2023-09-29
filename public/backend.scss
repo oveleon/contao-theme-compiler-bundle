@@ -1,5 +1,17 @@
 $themeCompilerPath: '/bundles/contaothemecompiler/';
 
+:root {
+  --tc-text: #696969;
+  --tc-head: #2a2a2a;
+  --tc-border: #e8e8e8;
+}
+
+html[data-color-scheme=dark] {
+  --tc-text: #ababab;
+  --tc-head: #cccccc;
+  --tc-border: #2f2f2f;
+}
+
 .tc_box {
   padding: 6px 15px 14px;
 
@@ -7,7 +19,7 @@ $themeCompilerPath: '/bundles/contaothemecompiler/';
     position: relative;
     padding: 6px 6px 6px 28px;
     margin-bottom: 2px;
-    color: #696969;
+    color: var(--tc-text);
 
     &:before {
       position: absolute;
@@ -23,7 +35,8 @@ $themeCompilerPath: '/bundles/contaothemecompiler/';
 
     b {
       font-family: Lato,sans-serif;
-      color: #2a2a2a;
+      color: var(--tc-head);
+
     }
 
     + .head {
@@ -32,9 +45,9 @@ $themeCompilerPath: '/bundles/contaothemecompiler/';
 
     &.head {
       font-family: Lato,sans-serif;
-      color: #2a2a2a;
+      color: var(--tc-head);
       padding: 9px 6px 8px 28px;
-      border-bottom: 1px solid #e8e8e8;
+      border-bottom: 1px solid var(--tc-border);
       border-radius: 3px 3px 0 0;
       margin-bottom: 6px;
 
