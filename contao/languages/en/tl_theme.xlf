@@ -5,16 +5,16 @@
         <source>Theme-Compiler</source>
       </trans-unit>
       <trans-unit id="tl_theme.skinSourceFiles.0">
-        <source>Skin source files</source>
+        <source>Theme source files</source>
       </trans-unit>
       <trans-unit id="tl_theme.skinSourceFiles.1">
         <source>Select the files to compile and their order here.</source>
       </trans-unit>
       <trans-unit id="tl_theme.combineSkinFiles.0">
-        <source>Combine skin source files</source>
+        <source>Combine theme source files</source>
       </trans-unit>
       <trans-unit id="tl_theme.combineSkinFiles.1">
-        <source>Combines all skin source files. Otherwise all files will be stored separately.</source>
+        <source>Combines all theme source files. Otherwise, all selected files will be stored separately.</source>
       </trans-unit>
       <trans-unit id="tl_theme.backupFiles.0">
         <source>Create backup files</source>
