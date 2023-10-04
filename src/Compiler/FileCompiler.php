@@ -193,7 +193,7 @@ class FileCompiler
             // reverse loading order so following skin files will override configurations from previous ones
             $skinFiles = array_reverse($skinFiles);
 
-            $this->msg('Skin files', self::MSG_HEAD);
+            $this->msg('Theme files', self::MSG_HEAD);
 
             foreach ($skinFiles as $fileUuid)
             {

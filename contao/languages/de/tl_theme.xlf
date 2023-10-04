@@ -6,20 +6,20 @@
         <target>Theme-Compiler</target>
       </trans-unit>
       <trans-unit id="tl_theme.skinSourceFiles.0">
-        <source>Skin source files</source>
-        <target>Skin-Quelldateien</target>
+        <source>Theme source files</source>
+        <target>Theme-Quelldateien</target>
       </trans-unit>
       <trans-unit id="tl_theme.skinSourceFiles.1">
         <source>Select the files to compile and their order here.</source>
         <target>Wählen Sie hier die zu kompilierenden Dateien und dessen Reihenfolge aus.</target>
       </trans-unit>
       <trans-unit id="tl_theme.combineSkinFiles.0">
-        <source>Combine skin source files</source>
-        <target>Skin-Quelldateien zusammenfassen</target>
+        <source>Combine theme source files</source>
+        <target>Theme-Quelldateien zusammenfassen</target>
       </trans-unit>
       <trans-unit id="tl_theme.combineSkinFiles.1">
-        <source>Combines all skin source files. Otherwise, all selected files will be stored separately.</source>
-        <target>Kombiniert alle Skin-Quelldateien. Andernfalls werden alle gewählten Dateien einzeln abgelegt.</target>
+        <source>Combines all theme source files. Otherwise, all selected files will be stored separately.</source>
+        <target>Kombiniert alle Theme-Quelldateien. Andernfalls werden alle gewählten Dateien einzeln abgelegt.</target>
       </trans-unit>
       <trans-unit id="tl_theme.backupFiles.0">
         <source>Create backup files</source>
