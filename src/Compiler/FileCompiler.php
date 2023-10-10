@@ -417,42 +417,42 @@ class FileCompiler
     /**
      * Parse config fields by configField
      */
-    public function parseConfig($sourceField): void
+    public function parseConfig($configType): void
     {
-        if ($sourceField)
+        if ($configType)
         {
-            $configVars = $this->objTheme->{$sourceField};
-
-            if ($configVars)
+            if (!$configVars = $this->objTheme->{$configType})
             {
-                $configVars = StringUtil::deserialize($configVars, true);
-
-                if (isset($GLOBALS['TC_HOOKS']['compilerParseConfig']) && \is_array($GLOBALS['TC_HOOKS']['compilerParseConfig']))
-                {
-                    foreach ($GLOBALS['TC_HOOKS']['compilerParseConfig'] as $callback)
-                    {
-                        System::importStatic($callback[0])->{$callback[1]}($this, $configVars);
-                    }
-                }
-
-                $strConfig  = '';
-
-                foreach ($configVars as $key => $varValue)
-                {
-                    $configVal = $this->parseVariableValue($varValue);
-
-                    if ($configVal || is_bool($configVal))
-                    {
-                        $strConfig .= sprintf("$%s:%s;\n", $key, is_bool($configVal) ? ($configVal ? 'true' : 'false')  : $configVal);
-                    }
-                }
-
-                $this->config = $strConfig;
-
-                $this->msg('Config Variables', self::MSG_HEAD);
-                $this->msg('Theme: ' . $this->objTheme->name);
-                $this->msg('Column: ' . $sourceField);
+                $configVars = [];
             }
+
+            $configVars = StringUtil::deserialize($configVars, true);
+
+            if (isset($GLOBALS['TC_HOOKS']['compilerParseConfig']) && \is_array($GLOBALS['TC_HOOKS']['compilerParseConfig']))
+            {
+                foreach ($GLOBALS['TC_HOOKS']['compilerParseConfig'] as $callback)
+                {
+                    System::importStatic($callback[0])->{$callback[1]}($this, $configVars);
+                }
+            }
+
+            $strConfig  = '';
+
+            foreach ($configVars as $key => $varValue)
+            {
+                $configVal = $this->parseVariableValue($varValue);
+
+                if ($configVal || is_bool($configVal))
+                {
+                    $strConfig .= sprintf("$%s:%s;\n", $key, is_bool($configVal) ? ($configVal ? 'true' : 'false')  : $configVal);
+                }
+            }
+
+            $this->config = $strConfig;
+
+            $this->msg('Config Variables', self::MSG_HEAD);
+            $this->msg('Theme: ' . $this->objTheme->name);
+            $this->msg('Column: ' . $configType);
         }
     }
 
