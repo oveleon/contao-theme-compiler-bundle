@@ -31,7 +31,7 @@ class CompilerUtils extends Backend
 	 */
 	public function addSaveNCompileButton(array $arrButtons, DataContainer $dc): array
 	{
-		$blnDisabled = $dc->activeRecord && !$dc->activeRecord->tstamp;
+		$blnDisabled = !$dc->activeRecord;
 
 		$arrButtons['saveNcompile'] = '<button type="submit" name="saveNcompile" id="saveNcompile" class="tl_submit themeCompileButton" accesskey="t" ' . ($blnDisabled ? "disabled" : "") . '>' . Image::getHtml('bundles/contaothemecompiler/icons/compile.svg') . ($GLOBALS['TL_LANG']['MSC']['saveNcompile'] ?? null) . '</button> ';
 
