@@ -18,6 +18,7 @@ use Contao\DataContainer;
 use Contao\Image;
 use Contao\StringUtil;
 use Contao\System;
+use Contao\ThemeModel;
 
 class CompilerUtils extends Backend
 {
@@ -31,9 +32,7 @@ class CompilerUtils extends Backend
 	 */
 	public function addSaveNCompileButton(array $arrButtons, DataContainer $dc): array
 	{
-		$blnDisabled = !$dc->activeRecord;
-
-		$arrButtons['saveNcompile'] = '<button type="submit" name="saveNcompile" id="saveNcompile" class="tl_submit themeCompileButton" accesskey="t" ' . ($blnDisabled ? "disabled" : "") . '>' . Image::getHtml('bundles/contaothemecompiler/icons/compile.svg') . ($GLOBALS['TL_LANG']['MSC']['saveNcompile'] ?? null) . '</button> ';
+		$arrButtons['saveNcompile'] = '<button type="submit" name="saveNcompile" id="saveNcompile" class="tl_submit themeCompileButton" accesskey="t">' . Image::getHtml('bundles/contaothemecompiler/icons/compile.svg') . ($GLOBALS['TL_LANG']['MSC']['saveNcompile'] ?? null) . '</button> ';
 
 		return $arrButtons;
 	}
@@ -45,6 +44,15 @@ class CompilerUtils extends Backend
 	{
 		if (isset($_POST['saveNcompile']))
 		{
+            if (
+                $dc->activeRecord &&
+                !$dc->activeRecord->tstamp &&
+                null !== ($objTheme = ThemeModel::findByPk($dc->id))
+            ) {
+                $objTheme->tstamp = time();
+                $objTheme->save(); // Set timestamp to save new record
+            }
+
             $container = System::getContainer();
 
 			// Generate the link to compile the theme
