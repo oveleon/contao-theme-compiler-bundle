@@ -36,10 +36,9 @@ $GLOBALS['TL_DCA']['tl_theme']['fields']['skinSourceFiles'] = [
 
 $GLOBALS['TL_DCA']['tl_theme']['fields']['combineSkinFiles'] = [
     'label'           => &$GLOBALS['TL_LANG']['tl_theme']['combineSkinFiles'],
-    'default'         => true,
     'exclude'         => true,
     'inputType'       => 'checkbox',
-    'sql'             => "char(1) NOT NULL default '1'"
+    'sql'             => "char(1) NOT NULL default ''"
 ];
 
 $GLOBALS['TL_DCA']['tl_theme']['fields']['outputFilesTargetDir'] = [
