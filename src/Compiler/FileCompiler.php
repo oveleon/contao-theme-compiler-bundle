@@ -84,6 +84,11 @@ class FileCompiler
     protected string $rootDir;
 
     /**
+     * Debug mode
+     */
+    protected bool|null $blnDebug;
+
+    /**
      * Custom skin files
      */
     public array $customSkinFiles = [];
@@ -96,10 +101,9 @@ class FileCompiler
         $container = System::getContainer();
 
         $this->rootDir  = $container->getParameter('kernel.project_dir');
+        $this->webDir   = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
+        $this->blnDebug = $container->getParameter('kernel.debug');
         $this->objTheme = ThemeModel::findById($themeId);
-
-        // Set web dir
-        $this->webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
         // Set target directory
         $objFile = FilesModel::findByUuid($this->objTheme->outputFilesTargetDir);
@@ -244,7 +248,7 @@ class FileCompiler
         $objCompiler = new Compiler();
 
         // Set compiler formatter
-        $objCompiler->setOutputStyle((Config::get('debugMode') ? OutputStyle::EXPANDED : OutputStyle::COMPRESSED));
+        $objCompiler->setOutputStyle(($this->blnDebug ? OutputStyle::EXPANDED : OutputStyle::COMPRESSED));
 
         // Set import paths
         if ($this->importPaths !== null)
