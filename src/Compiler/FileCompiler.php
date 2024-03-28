@@ -579,24 +579,14 @@ class FileCompiler
             }
 
             // top,right,bottom,left / unit
-            if (array_key_exists('top', $varValue) && (!$varValue['unit'] || $varValue['top']==''))
+            if (array_key_exists('top', $varValue) && $varValue['top']=='')
             {
-                if (strpos($varValue['top'], '$') === 0)
-                {
-                    return [false, $varValue['top']];
-                }
-
                 return [false, ''];
             }
 
             // value / unit
-            if (array_key_exists('unit', $varValue) && !array_key_exists('top', $varValue) && (!$varValue['unit'] || $varValue['value']==''))
+            if (array_key_exists('unit', $varValue) && !array_key_exists('top', $varValue) && $varValue['value']=='')
             {
-                if (strpos($varValue['value'], '$') === 0)
-                {
-                    return [false, $varValue['value']];
-                }
-
                 return [false, ''];
             }
 
