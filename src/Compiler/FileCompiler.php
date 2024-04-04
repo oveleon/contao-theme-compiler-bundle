@@ -94,6 +94,11 @@ class FileCompiler
     public array $customSkinFiles = [];
 
     /**
+     * Activate database file sync if file exists
+     */
+    private bool $fileSync;
+
+    /**
      * FileCompiler constructor.
      */
     public function __construct($themeId)
@@ -104,6 +109,7 @@ class FileCompiler
         $this->webDir   = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
         $this->blnDebug = $container->getParameter('kernel.debug');
         $this->objTheme = ThemeModel::findById($themeId);
+        $this->fileSync = $container->getParameter('contao_theme_compiler.file_sync');
 
         // Set target directory
         $objFile = FilesModel::findByUuid($this->objTheme->outputFilesTargetDir);
@@ -275,8 +281,8 @@ class FileCompiler
             // First the default configuration is added, then the theme configuration
             // which can override the defaults, and then all other files are added.
             $content = $scssConfigContent .
-                       $tableConfigContent .
-                       $content;
+                $tableConfigContent .
+                $content;
         }
         else
         {
@@ -316,6 +322,24 @@ class FileCompiler
      */
     private function saveFile(string $content, string $filename, string $ext = self::FILE_EXT): void
     {
+        if (
+            !$this->objTheme->backupFiles &&
+            !$this->fileSync &&
+            file_exists($path = $this->rootDir . '/' . $this->targetDir . '/' . $filename . $ext)
+        ) {
+            if (file_put_contents($path, $content . "\n/** Compiled with Theme Compiler */"))
+            {
+                $this->msg('File saved: ' . $this->targetDir . '/' . $filename . $ext, self::MSG_SUCCESS);
+            }
+            else
+            {
+                $this->msg('File could not be saved: ' . $this->targetDir . '/' . $filename . $ext, self::MSG_ERROR);
+            }
+
+            unset($content);
+            return;
+        }
+
         $objFile = new File($this->targetDir . '/' . $filename . $ext);
 
         if ($this->objTheme->backupFiles && $objFile->exists())
