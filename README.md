@@ -6,6 +6,7 @@ The contao theme compiler bundle adds the functionality to compile selected scss
 + [How to install](#how-to-install-the-package)
 + [Initial setup](#initial-setup)
 + [Console commands](#console-commands)
++ [Miscellaneous](#miscellaneous)
 
 ## Features
 
@@ -18,11 +19,13 @@ The contao theme compiler bundle adds the functionality to compile selected scss
 ## How to install the package
 
 #### Via composer
+
 ```
 composer require oveleon/contao-theme-compiler-bundle
 ```
 
 #### Via contao-manager
+
 ```
 Search for contao theme compiler bundle and add it to your extensions.
 ```
@@ -65,6 +68,22 @@ php vendor/bin/contao-console contao:themecompiler:list
 ### Compile theme
 
 - Compiles a theme ([id] is mandatory):
+
 ```
 php vendor/bin/contao-console contao:themecompiler:compile [id]
+```
+
+## Miscellaneous
+
+### Enable file sync on every compilation
+
+Version 1.8 has been rewritten to skip the DBAFS sync if the files already exist. This saves a database call and logic
+for each output file and improves compilation time.
+
+To enable the old behaviour, use following in your config.yaml
+
+```yaml
+# config/config.yml
+contao_theme_compiler:
+  file_sync: true
 ```

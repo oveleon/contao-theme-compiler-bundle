@@ -20,8 +20,12 @@ class ContaoThemeCompilerExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
+        $config = $this->processConfiguration(new Configuration(), $configs);
+
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../config'));
         $loader->load('services.yaml');
         $loader->load('commands.yaml');
+
+        $container->setParameter('contao_theme_compiler.file_sync', $config['file_sync']);
     }
 }
