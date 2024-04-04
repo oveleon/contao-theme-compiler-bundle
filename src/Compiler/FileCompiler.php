@@ -11,9 +11,9 @@
 
 namespace Oveleon\ContaoThemeCompilerBundle\Compiler;
 
-use Contao\Config;
 use Contao\File;
 use Contao\FilesModel;
+use Contao\Folder;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\ThemeModel;
@@ -74,6 +74,11 @@ class FileCompiler
     protected string $targetDir;
 
     /**
+     * Backup dir
+     */
+    protected ?string $backupDir;
+
+    /**
      * Messages
      */
     protected ?array $messages = [];
@@ -94,12 +99,18 @@ class FileCompiler
     public array $customSkinFiles = [];
 
     /**
+     * Backup files
+     */
+    private bool|null $blnBackup;
+
+    /**
      * Activate database file sync if file exists
      */
     private bool $fileSync;
 
     /**
      * FileCompiler constructor.
+     * @throws Exception
      */
     public function __construct($themeId)
     {
@@ -121,6 +132,14 @@ class FileCompiler
         else
         {
             trigger_error('Missing settings for Theme ' . $this->objTheme->name . ': No target directory could be found.', E_USER_ERROR);
+        }
+
+        // Create backup dir if it does not exist yet
+        if (
+            ($this->blnBackup = $this->objTheme->backupFiles) &&
+            !is_dir($this->backupDir = $objFile->path . '/compiler_backup')
+        ) {
+            new Folder($this->backupDir);
         }
 
         // Collect data from config
@@ -322,44 +341,37 @@ class FileCompiler
      */
     private function saveFile(string $content, string $filename, string $ext = self::FILE_EXT): void
     {
-        if (
-            !$this->objTheme->backupFiles &&
-            !$this->fileSync &&
-            file_exists($path = $this->rootDir . '/' . $this->targetDir . '/' . $filename . $ext)
-        ) {
-            if (file_put_contents($path, $content . "\n/** Compiled with Theme Compiler */"))
-            {
-                $this->msg('File saved: ' . $this->targetDir . '/' . $filename . $ext, self::MSG_SUCCESS);
-            }
-            else
-            {
-                $this->msg('File could not be saved: ' . $this->targetDir . '/' . $filename . $ext, self::MSG_ERROR);
-            }
+        $filePath = $this->targetDir . '/' . $filename . $ext;
 
-            unset($content);
-            return;
-        }
-
-        $objFile = new File($this->targetDir . '/' . $filename . $ext);
-
-        if ($this->objTheme->backupFiles && $objFile->exists())
+        if (!$this->fileSync && file_exists($path = $this->rootDir . '/' . $filePath))
         {
-            $objFile->copyTo($this->targetDir . '/compiler_backup/' . $filename . '_' . date('Y-m-d_H-i') . $ext);
-        }
+            $blnSuccess = file_put_contents($path, $content . "\n/** Compiled with Theme Compiler */");
 
-        $objFile->truncate();
-
-        if ($objFile->write($content . "\n/** Compiled with Theme Compiler */"))
-        {
-            $this->msg('File saved: ' . $this->targetDir . '/' . $filename . $ext, self::MSG_SUCCESS);
+            if ($this->blnBackup)
+            {
+                copy($path, $this->rootDir . '/' . $this->backupDir . '/' . $filename . '_' . date('Y-m-d_H-i') . $ext);
+            }
         }
         else
         {
-            $this->msg('File could not be saved: ' . $this->targetDir . '/' . $filename . $ext, self::MSG_ERROR);
+            $objFile = new File($filePath);
+
+            if ($this->blnBackup && $objFile->exists())
+            {
+                $objFile->copyTo($this->backupDir . '/' . $filename . '_' . date('Y-m-d_H-i') . $ext);
+            }
+
+            $objFile->truncate();
+            $blnSuccess = $objFile->write($content . "\n/** Compiled with Theme Compiler */");
+            $objFile->close();
         }
 
+        $this->msg(
+            ($blnSuccess ? 'File saved: ' : 'File could not be saved: ') . $filePath,
+            $blnSuccess ? self::MSG_SUCCESS : self::MSG_ERROR
+        );
+
         unset($content);
-        $objFile->close();
     }
 
     /**

@@ -18,6 +18,11 @@
       "name": "Daniele Sciannimanica",
       "homepage": "https://github.com/doishub",
       "role": "Developer"
+    },
+    {
+      "name": "Sebastian Zoglowek",
+      "homepage": "https://github.com/zoglo",
+      "role": "Developer"
     }
   ],
   "require": {
@@ -34,7 +39,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-main": "1.7.x-dev"
+      "dev-main": "1.8.x-dev"
     },
     "contao-manager-plugin": "Oveleon\\ContaoThemeCompilerBundle\\ContaoManager\\Plugin"
   },

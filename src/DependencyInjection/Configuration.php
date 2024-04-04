@@ -14,7 +14,7 @@ class Configuration implements ConfigurationInterface
             ->getRootNode()
             ->children()
                 ->booleanNode('file_sync')
-                    ->defaultTrue()
+                    ->defaultFalse()
                 ->end()
             ->end()
         ;
