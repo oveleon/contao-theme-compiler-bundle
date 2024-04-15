@@ -691,7 +691,7 @@ class FileCompiler
     /**
      * Check if a file exists and return the full path
      */
-    private function fileExists(string $strFilePath): bool|string
+    public function fileExists(string $strFilePath): bool|string
     {
         // Check the source file
         if (!file_exists($this->rootDir . '/' . $strFilePath))
