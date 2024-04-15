@@ -196,7 +196,11 @@ class FileCompiler
             foreach ($this->files as $arrFile)
             {
                 $filename = StringUtil::standardize($arrFile['name']);
-                $content  = $this->getFileContent($arrFile['path']);
+
+                if (!$content = $this->getFileContent($arrFile['path']))
+                {
+                    continue;
+                }
 
                 $this->msg('Compile file: ' . $arrFile['path']);
 
@@ -674,8 +678,13 @@ class FileCompiler
     /**
      * Return the file content
      */
-    public function getFileContent($filePath): string
+    public function getFileContent($filePath): string|false
     {
+        if (!$this->fileExists($filePath))
+        {
+            return false;
+        }
+
         return file_get_contents($this->rootDir . '/' . $filePath);
     }
 
