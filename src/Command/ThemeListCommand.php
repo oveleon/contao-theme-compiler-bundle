@@ -29,14 +29,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class ThemeListCommand extends Command
 {
     protected static $defaultName = 'contao:themecompiler:list';
+
     protected static $defaultDescription = 'Gets a list of all themes';
 
-    protected ContaoFramework $framework;
-
-    public function __construct(ContaoFramework $contaoFramework)
+    public function __construct(protected ContaoFramework $framework)
     {
-        $this->framework = $contaoFramework;
-
         parent::__construct();
     }
 
@@ -49,17 +46,17 @@ class ThemeListCommand extends Command
 
         $io->title('Themes');
 
-        if ($objTheme !== null)
+        if (null !== $objTheme)
         {
             while ($objTheme->next())
             {
-                $outputDir = (FilesModel::findByUuid($objTheme->outputFilesTargetDir))->path ?? '{{empty}}';
+                $outputDir = FilesModel::findByUuid($objTheme->outputFilesTargetDir)->path ?? '{{empty}}';
 
                 $io->block(
-                    $objTheme->name . ' [Target directory: ' . $outputDir . ' ]',
+                    $objTheme->name.' [Target directory: '.$outputDir.' ]',
                     (string) $objTheme->id,
                     'fg=yellow',
-                    ' '
+                    ' ',
                 );
             }
         }

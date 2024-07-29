@@ -21,30 +21,31 @@ use Contao\MaintenanceModuleInterface;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\ThemeModel;
+use Exception;
 
 class ThemeCompiler extends Backend implements MaintenanceModuleInterface
 {
-	/**
-	 * Return true if the module is active
-	 */
-	public function isActive(): bool
+    /**
+     * Return true if the module is active.
+     */
+    public function isActive(): bool
     {
-        return Input::get('act') == 'compile';
-	}
+        return 'compile' === Input::get('act');
+    }
 
-	/**
-	 * Generate the module
-	 */
-	public function run(): string
+    /**
+     * Generate the module.
+     */
+    public function run(): string
     {
-		/** @var BackendTemplate|object $objTemplate */
-		$objTemplate = new BackendTemplate('be_theme_compiler');
-		$objTemplate->action = StringUtil::ampersand(Environment::get('request'));
-		$objTemplate->headline = $GLOBALS['TL_LANG']['tl_maintenance']['themeCompiler'] ?? null;
-		$objTemplate->isActive = $this->isActive();
+        /** @var BackendTemplate|object $objTemplate */
+        $objTemplate = new BackendTemplate('be_theme_compiler');
+        $objTemplate->action = StringUtil::ampersand(Environment::get('request'));
+        $objTemplate->headline = $GLOBALS['TL_LANG']['tl_maintenance']['themeCompiler'] ?? null;
+        $objTemplate->isActive = $this->isActive();
 
         // Compile files
-        if ('compile' == Input::get('act'))
+        if ('compile' === Input::get('act'))
         {
             $intId = Input::get('theme');
 
@@ -57,21 +58,23 @@ class ThemeCompiler extends Backend implements MaintenanceModuleInterface
 
                     $arrMessages = $compiler->getMessages();
 
-                    if (empty($arrMessages))
+                    if ([] === $arrMessages)
                     {
-                        $messages[] = '<div class="'. 'MSG_ERROR' .'">' . $GLOBALS['TL_LANG']['tl_maintenance']['themeCompilerNoConfiguration'] ?? null . '</div>';
+                        $messages[] = '<div class="MSG_ERROR">'.$GLOBALS['TL_LANG']['tl_maintenance']['themeCompilerNoConfiguration'] ?? null.'</div>';
                     }
-                    else {
+                    else
+                    {
                         $messages = [];
 
-                        foreach ($arrMessages as $arrMessage) {
-                            $messages[] = '<div class="'. $arrMessage['type'] .'">' . $arrMessage['message'] . '</div>';
+                        foreach ($arrMessages as $arrMessage)
+                        {
+                            $messages[] = '<div class="'.$arrMessage['type'].'">'.$arrMessage['message'].'</div>';
                         }
                     }
 
-                    $objTemplate->logs = implode("", $messages);
+                    $objTemplate->logs = implode('', $messages);
                 }
-                catch(\Exception $e)
+                catch (Exception $e)
                 {
                     $objTemplate->class = 'tl_error';
                     $objTemplate->explain = $e->getMessage();
@@ -79,7 +82,7 @@ class ThemeCompiler extends Backend implements MaintenanceModuleInterface
             }
             else
             {
-                $objTemplate->class= 'tl_error';
+                $objTemplate->class = 'tl_error';
                 $objTemplate->explain = $GLOBALS['TL_LANG']['tl_maintenance']['themeCompilerNoTheme'] ?? null;
             }
 
@@ -92,11 +95,11 @@ class ThemeCompiler extends Backend implements MaintenanceModuleInterface
         $objTheme = ThemeModel::findAll();
         $arrThemes = [];
 
-        if ($objTheme !== null)
+        if (null !== $objTheme)
         {
             while ($objTheme->next())
             {
-                $arrThemes[ $objTheme->id ] = $objTheme->name;
+                $arrThemes[$objTheme->id] = $objTheme->name;
             }
         }
 
@@ -105,6 +108,6 @@ class ThemeCompiler extends Backend implements MaintenanceModuleInterface
         $objTemplate->submit = $GLOBALS['TL_LANG']['tl_maintenance']['themeCompilerCompile'] ?? null;
         $objTemplate->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 
-		return $objTemplate->parse();
-	}
+        return $objTemplate->parse();
+    }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao Theme Compiler Bundle.
  *
@@ -24,100 +26,105 @@ use ScssPhp\ScssPhp\Exception\SassException;
 use ScssPhp\ScssPhp\OutputStyle;
 
 /**
- * File Compiler
- *
- * @author Daniele Sciannimanica <https://github.com/doishub>
+ * File Compiler.
  */
 class FileCompiler
 {
-    const MSG_INFO = 'tc_info';
-    const MSG_HEAD = 'tc_info head';
-    const MSG_SUCCESS = 'tc_success';
-    const MSG_WARN = 'tc_warn';
-    const MSG_ERROR = 'tc_error';
-    const MSG_NOTE = 'tc_note';
-    const FILE_EXT = '.css';
+    public const MSG_INFO = 'tc_info';
+
+    public const MSG_HEAD = 'tc_info head';
+
+    public const MSG_SUCCESS = 'tc_success';
+
+    public const MSG_WARN = 'tc_warn';
+
+    public const MSG_ERROR = 'tc_error';
+
+    public const MSG_NOTE = 'tc_note';
+
+    public const FILE_EXT = '.css';
 
     /**
-     * Theme Object
+     * Theme Object.
      */
-    public null|ThemeModel $objTheme;
+    public ThemeModel|null $objTheme;
 
     /**
-     * Source path to config
-     */
-    protected ?array $configFiles = null;
-
-    /**
-     * Configuration fields from custom table field in tl_theme
-     */
-    protected ?string $config = null;
-
-    /**
-     * Files to combine
-     */
-    protected ?array $files = null;
-
-    /**
-     * Import paths
-     */
-    protected ?array $importPaths = null;
-
-    /**
-     * Web dir relative to root dir
-     */
-    protected string $webDir;
-
-    /**
-     * Target dir
-     */
-    protected string $targetDir;
-
-    /**
-     * Backup dir
-     */
-    protected ?string $backupDir;
-
-    /**
-     * Messages
-     */
-    protected ?array $messages = [];
-
-    /**
-     * Root directory
-     */
-    protected string $rootDir;
-
-    /**
-     * Debug mode
-     */
-    protected bool|null $blnDebug;
-
-    /**
-     * Custom skin files
+     * Custom skin files.
      */
     public array $customSkinFiles = [];
 
     /**
-     * Backup files
+     * Source path to config.
      */
-    private bool|null $blnBackup;
+    protected array|null $configFiles = null;
 
     /**
-     * Activate database file sync if file exists
+     * Configuration fields from custom table field in tl_theme.
      */
-    private bool $fileSync;
+    protected string|null $config = null;
+
+    /**
+     * Files to combine.
+     */
+    protected array|null $files = null;
+
+    /**
+     * Import paths.
+     */
+    protected array|null $importPaths = null;
+
+    /**
+     * Web dir relative to root dir.
+     */
+    protected string $webDir;
+
+    /**
+     * Target dir.
+     */
+    protected string $targetDir;
+
+    /**
+     * Backup dir.
+     */
+    protected string|null $backupDir = null;
+
+    /**
+     * Messages.
+     */
+    protected array|null $messages = [];
+
+    /**
+     * Root directory.
+     */
+    protected string $rootDir;
+
+    /**
+     * Debug mode.
+     */
+    protected bool|null $blnDebug;
+
+    /**
+     * Backup files.
+     */
+    private bool|null $blnBackup = null;
+
+    /**
+     * Activate database file sync if file exists.
+     */
+    private readonly bool $fileSync;
 
     /**
      * FileCompiler constructor.
+     *
      * @throws Exception
      */
     public function __construct($themeId)
     {
         $container = System::getContainer();
 
-        $this->rootDir  = $container->getParameter('kernel.project_dir');
-        $this->webDir   = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
+        $this->rootDir = $container->getParameter('kernel.project_dir');
+        $this->webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
         $this->blnDebug = $container->getParameter('kernel.debug');
         $this->objTheme = ThemeModel::findById($themeId);
         $this->fileSync = $container->getParameter('contao_theme_compiler.file_sync');
@@ -131,13 +138,13 @@ class FileCompiler
         }
         else
         {
-            trigger_error('Missing settings for Theme ' . $this->objTheme->name . ': No target directory could be found.', E_USER_ERROR);
+            trigger_error('Missing settings for Theme '.$this->objTheme->name.': No target directory could be found.', E_USER_ERROR);
         }
 
         // Create backup dir if it does not exist yet
         if (
-            ($this->blnBackup = $this->objTheme->backupFiles) &&
-            !is_dir($this->backupDir = $objFile->path . '/compiler_backup')
+            ($this->blnBackup = $this->objTheme->backupFiles)
+            && !is_dir($this->backupDir = $objFile->path.'/compiler_backup')
         ) {
             new Folder($this->backupDir);
         }
@@ -176,7 +183,7 @@ class FileCompiler
     }
 
     /**
-     * Compile all files from global array
+     * Compile all files from global array.
      */
     public function compileAll(): void
     {
@@ -185,7 +192,7 @@ class FileCompiler
     }
 
     /**
-     * Compile and save files from config: $GLOBALS['TC_SOURCES']['files']
+     * Compile and save files from config: $GLOBALS['TC_SOURCES']['files'].
      */
     public function compileConfigFiles(): void
     {
@@ -202,10 +209,10 @@ class FileCompiler
                     continue;
                 }
 
-                $this->msg('Compile file: ' . $arrFile['path']);
+                $this->msg('Compile file: '.$arrFile['path']);
 
                 // Add default import path
-                $this->importPaths[] = $this->rootDir . '/' . \dirname($arrFile['path']);
+                $this->importPaths[] = $this->rootDir.'/'.\dirname((string) $arrFile['path']);
 
                 // Compile content and save file
                 $this->saveFile($this->compile($content)->getCss(), $filename);
@@ -214,14 +221,14 @@ class FileCompiler
     }
 
     /**
-     * Compile and save skin files
+     * Compile and save skin files.
      */
     public function compileSkinFiles(): void
     {
         $arrContent = [];
         $skinFiles = array_merge($this->customSkinFiles, StringUtil::deserialize($this->objTheme->skinSourceFiles, true));
 
-        if (!empty($skinFiles))
+        if ([] !== $skinFiles)
         {
             // reverse loading order so following skin files will override configurations from previous ones
             $skinFiles = array_reverse($skinFiles);
@@ -232,23 +239,23 @@ class FileCompiler
             {
                 $file = FilesModel::findByUuid($fileUuid);
 
-                if ($file === null)
+                if (null === $file)
                 {
                     continue;
                 }
 
-                $this->msg('Compile file: ' . $file->path);
+                $this->msg('Compile file: '.$file->path);
 
                 $filename = StringUtil::standardize(basename($file->name, $file->extension));
-                $content  = $this->getFileContent($file->path);
+                $content = $this->getFileContent($file->path);
 
                 // Add default import path
-                $this->importPaths[] = $this->rootDir . '/' . \dirname($file->path);
+                $this->importPaths[] = $this->rootDir.'/'.\dirname($file->path);
 
                 // Compile content
-                $strCompiled =  $this->compile($content)->getCss();
+                $strCompiled = $this->compile($content)->getCss();
 
-                if (!!$this->objTheme->combineSkinFiles)
+                if ((bool) $this->objTheme->combineSkinFiles)
                 {
                     $arrContent[$filename] = $strCompiled;
                 }
@@ -258,18 +265,18 @@ class FileCompiler
                 }
             }
 
-            if (!!$this->objTheme->combineSkinFiles)
+            if ((bool) $this->objTheme->combineSkinFiles)
             {
                 $this->saveFile(
                     implode("\n", array_values($arrContent)),
-                    implode("_", array_keys($arrContent))
+                    implode('_', array_keys($arrContent)),
                 );
             }
         }
     }
 
     /**
-     * Compile SCSS file content
+     * Compile SCSS file content.
      */
     public function compile($content): CompilationResult|string
     {
@@ -277,15 +284,15 @@ class FileCompiler
         $objCompiler = new Compiler();
 
         // Set compiler formatter
-        $objCompiler->setOutputStyle(($this->blnDebug ? OutputStyle::EXPANDED : OutputStyle::COMPRESSED));
+        $objCompiler->setOutputStyle($this->blnDebug ? OutputStyle::EXPANDED : OutputStyle::COMPRESSED);
 
         // Set import paths
-        if ($this->importPaths !== null)
+        if (null !== $this->importPaths)
         {
             $objCompiler->setImportPaths($this->importPaths);
         }
 
-        if ($this->configFiles !== null)
+        if (null !== $this->configFiles)
         {
             $tableConfigContent = '';
             $scssConfigContent = '';
@@ -303,27 +310,27 @@ class FileCompiler
 
             // First the default configuration is added, then the theme configuration
             // which can override the defaults, and then all other files are added.
-            $content = $scssConfigContent .
-                $tableConfigContent .
+            $content = $scssConfigContent.
+                $tableConfigContent.
                 $content;
         }
         else
         {
             // Use global config variables
-            $arrVars    = StringUtil::deserialize($this->objTheme->vars);
+            $arrVars = StringUtil::deserialize($this->objTheme->vars);
             $globalVars = null;
 
             foreach ($arrVars as $var)
             {
-                $globalVars[ $var['key'] ] = $var['value'];
+                $globalVars[$var['key']] = $var['value'];
             }
 
-            if ($globalVars !== null)
+            if (null !== $globalVars)
             {
                 $objCompiler->addVariables($globalVars);
             }
 
-            //$objCompiler->getVariables();
+            // $objCompiler->getVariables();
         }
 
         try
@@ -339,47 +346,7 @@ class FileCompiler
     }
 
     /**
-     * Create and save a File
-     *
-     * @throws Exception
-     */
-    private function saveFile(string $content, string $filename, string $ext = self::FILE_EXT): void
-    {
-        $filePath = $this->targetDir . '/' . $filename . $ext;
-
-        if (!$this->fileSync && file_exists($path = $this->rootDir . '/' . $filePath))
-        {
-            $blnSuccess = file_put_contents($path, $content . "\n/** Compiled with Theme Compiler */");
-
-            if ($this->blnBackup)
-            {
-                copy($path, $this->rootDir . '/' . $this->backupDir . '/' . $filename . '_' . date('Y-m-d_H-i') . $ext);
-            }
-        }
-        else
-        {
-            $objFile = new File($filePath);
-
-            if ($this->blnBackup && $objFile->exists())
-            {
-                $objFile->copyTo($this->backupDir . '/' . $filename . '_' . date('Y-m-d_H-i') . $ext);
-            }
-
-            $objFile->truncate();
-            $blnSuccess = $objFile->write($content . "\n/** Compiled with Theme Compiler */");
-            $objFile->close();
-        }
-
-        $this->msg(
-            ($blnSuccess ? 'File saved: ' : 'File could not be saved: ') . $filePath,
-            $blnSuccess ? self::MSG_SUCCESS : self::MSG_ERROR
-        );
-
-        unset($content);
-    }
-
-    /**
-     * Add a file
+     * Add a file.
      */
     public function add(string $strFile): void
     {
@@ -396,14 +363,14 @@ class FileCompiler
 
         // Store the file
         $this->files[] = [
-            'name'      => basename($strPath, $strType),
-            'path'      => $strPath,
-            'extension' => $strType
+            'name' => basename($strPath, $strType),
+            'path' => $strPath,
+            'extension' => $strType,
         ];
     }
 
     /**
-     * Add multiple files from an array
+     * Add multiple files from an array.
      */
     public function addMultiple(array $arrFiles): void
     {
@@ -414,17 +381,18 @@ class FileCompiler
     }
 
     /**
-     * Add scss import paths
+     * Add scss import paths.
      */
     public function setImportPaths(array $arrImportPaths): void
     {
-        foreach ($arrImportPaths as $path) {
+        foreach ($arrImportPaths as $path)
+        {
             $this->addImportPath($path);
         }
     }
 
     /**
-     * Add scss import path
+     * Add scss import path.
      */
     public function addImportPath(string $strImportPath): void
     {
@@ -437,7 +405,7 @@ class FileCompiler
     }
 
     /**
-     * Set / overwrite the path to the config file
+     * Set / overwrite the path to the config file.
      */
     public function setConfigFiles($arrSourcePaths): void
     {
@@ -449,17 +417,17 @@ class FileCompiler
             {
                 $this->configFiles[] = $strPath;
 
-                $this->msg('Read file: ' . $strPath);
+                $this->msg('Read file: '.$strPath);
             }
             else
             {
-                $this->msg('Could not found: ' . $strPath, self::MSG_ERROR);
+                $this->msg('Could not found: '.$strPath, self::MSG_ERROR);
             }
         }
     }
 
     /**
-     * Parse config fields by configField
+     * Parse config fields by configField.
      */
     public function parseConfig($configType): void
     {
@@ -480,32 +448,32 @@ class FileCompiler
                 }
             }
 
-            $strConfig  = '';
+            $strConfig = '';
 
             foreach ($configVars as $key => $varValue)
             {
                 $configVal = $this->parseVariableValue($varValue);
 
-                if ($configVal || is_bool($configVal))
+                if ($configVal || \is_bool($configVal))
                 {
-                    $strConfig .= sprintf("$%s:%s;\n", $key, is_bool($configVal) ? ($configVal ? 'true' : 'false')  : $configVal);
+                    $strConfig .= sprintf("$%s:%s;\n", $key, \is_bool($configVal) ? ($configVal ? 'true' : 'false') : $configVal);
                 }
             }
 
             $this->config = $strConfig;
 
             $this->msg('Config Variables', self::MSG_HEAD);
-            $this->msg('Theme: ' . $this->objTheme->name);
-            $this->msg('Column: ' . $configType);
+            $this->msg('Theme: '.$this->objTheme->name);
+            $this->msg('Column: '.$configType);
         }
     }
 
     /**
-     * Return the parsed value
+     * Return the parsed value.
      */
-    public function parseVariableValue($varValue): ?string
+    public function parseVariableValue($varValue): string|null
     {
-        if ('' == $varValue)
+        if ('' === $varValue)
         {
             return $varValue;
         }
@@ -513,7 +481,7 @@ class FileCompiler
         $varUnserialized = @unserialize($varValue);
 
         // handle empty or variable values
-        list($blnValid, $val) = $this->isValidValue(\is_array($varUnserialized) ? $varUnserialized : $varValue);
+        [$blnValid, $val] = $this->isValidValue(\is_array($varUnserialized) ? $varUnserialized : $varValue);
 
         if (!$blnValid)
         {
@@ -528,60 +496,57 @@ class FileCompiler
             {
                 $strValue = '';
 
-                if ($varUnserialized['top'] != '')
+                if ('' !== $varUnserialized['top'])
                 {
-                    $strValue .= $varUnserialized['top'] . $varUnserialized['unit'] . ' ';
+                    $strValue .= $varUnserialized['top'].$varUnserialized['unit'].' ';
                 }
 
-                if ($varUnserialized['top'] != '' && $varUnserialized['right'] != '')
+                if ('' !== $varUnserialized['top'] && '' !== $varUnserialized['right'])
                 {
-                    $strValue .= $varUnserialized['right'] . $varUnserialized['unit'] . ' ';
+                    $strValue .= $varUnserialized['right'].$varUnserialized['unit'].' ';
                 }
 
-                if ($varUnserialized['top'] != '' && $varUnserialized['right'] != '' && $varUnserialized['bottom'] != '')
+                if ('' !== $varUnserialized['top'] && '' !== $varUnserialized['right'] && '' !== $varUnserialized['bottom'])
                 {
-                    $strValue .= $varUnserialized['bottom'] . $varUnserialized['unit'] . ' ';
+                    $strValue .= $varUnserialized['bottom'].$varUnserialized['unit'].' ';
                 }
 
-                if ($varUnserialized['top'] != '' && $varUnserialized['right'] != '' && $varUnserialized['bottom'] != '' && $varUnserialized['left'] != '')
+                if ('' !== $varUnserialized['top'] && '' !== $varUnserialized['right'] && '' !== $varUnserialized['bottom'] && '' !== $varUnserialized['left'])
                 {
-                    $strValue .= $varUnserialized['left'] . $varUnserialized['unit'];
+                    $strValue .= $varUnserialized['left'].$varUnserialized['unit'];
                 }
 
                 return trim($strValue);
             }
 
             // handle a single field with unit
-            elseif (isset($varUnserialized['unit']))
+            if (isset($varUnserialized['unit']))
             {
-                return $varUnserialized['value'] . $varUnserialized['unit'];
+                return $varUnserialized['value'].$varUnserialized['unit'];
             }
 
             // handle a keyValue field
-            elseif (isset($varUnserialized[0]['key']) && isset($varUnserialized[0]['value']))
+            if (isset($varUnserialized[0]['key'], $varUnserialized[0]['value']))
             {
                 $arrList = [];
 
-                foreach ($varUnserialized as $ind => $opts)
+                foreach ($varUnserialized as $opts)
                 {
                     if ($opts['key'] && $opts['value'])
                     {
-                        $arrList[] = $opts['key'] . ':' . $opts['value'];
+                        $arrList[] = $opts['key'].':'.$opts['value'];
                     }
                 }
 
-                return '(' . implode(',', $arrList) . ')';
+                return '('.implode(',', $arrList).')';
             }
 
             // handle two-size color fields
-            elseif (count($varUnserialized) === 2)
+            if (2 === \count($varUnserialized))
             {
-                if (ctype_xdigit($varUnserialized[0]))
+                if (ctype_xdigit((string) $varUnserialized[0]) && $varUnserialized[1])
                 {
-                    if ($varUnserialized[1])
-                    {
-                        return 'rgba(' . implode(',', $this->convertHexColor($varUnserialized[0])) . ',' . ($varUnserialized[1] / 100) . ')';
-                    }
+                    return 'rgba('.implode(',', $this->convertHexColor($varUnserialized[0])).','.($varUnserialized[1] / 100).')';
                 }
 
                 $varValue = $varUnserialized[0];
@@ -589,9 +554,9 @@ class FileCompiler
         }
 
         // handle colors
-        if (ctype_xdigit($varValue) && strpos($varValue, '#') !== 0 && \strlen($varValue) == 6)
+        if (ctype_xdigit((string) $varValue) && !str_starts_with((string) $varValue, '#') && 6 === \strlen((string) $varValue))
         {
-            return '#' . $varValue;
+            return '#'.$varValue;
         }
 
         if (isset($GLOBALS['TC_HOOKS']['compilerParseVariableValue']) && \is_array($GLOBALS['TC_HOOKS']['compilerParseVariableValue']))
@@ -606,38 +571,91 @@ class FileCompiler
     }
 
     /**
-     * Validate Value
+     * Return the file content.
+     */
+    public function getFileContent($filePath): string|false
+    {
+        if (!$this->fileExists($filePath))
+        {
+            return false;
+        }
+
+        return file_get_contents($this->rootDir.'/'.$filePath);
+    }
+
+    /**
+     * Check if a file exists and return the full path.
+     */
+    public function fileExists(string $strFilePath): bool|string
+    {
+        // Check the source file
+        if (!file_exists($this->rootDir.'/'.$strFilePath))
+        {
+            // Handle public bundle resources in web/
+            if (file_exists($this->rootDir.'/'.$this->webDir.'/'.$strFilePath))
+            {
+                return $this->webDir.'/'.$strFilePath;
+            }
+
+            return false;
+        }
+
+        return $strFilePath;
+    }
+
+    /** Add messages.
+     *
+     */
+    public function msg($message, string $type = self::MSG_INFO): void
+    {
+        $this->messages[] = [
+            'message' => $message,
+            'type' => $type,
+        ];
+    }
+
+    /**
+     * Returns all messages.
+     */
+    public function getMessages(): array
+    {
+        return $this->messages;
+    }
+
+    /**
+     * Validate Value.
      */
     protected function isValidValue($varValue): array
     {
         if (\is_array($varValue))
         {
             // empty lists
-            if (!count($varValue))
+            if ([] === $varValue)
             {
                 return [false, ''];
             }
 
             // top,right,bottom,left / unit
-            if (array_key_exists('top', $varValue) && $varValue['top']=='')
+            if (\array_key_exists('top', $varValue) && '' === $varValue['top'])
             {
                 return [false, ''];
             }
 
             // value / unit
-            if (array_key_exists('unit', $varValue) && !array_key_exists('top', $varValue) && $varValue['value']=='')
+            if (\array_key_exists('unit', $varValue) && !\array_key_exists('top', $varValue) && '' === $varValue['value'])
             {
                 return [false, ''];
             }
 
             // empty color values (with transparency)
-            if (count($varValue) === 2)
+            if (2 === \count($varValue))
             {
-                if (!count(array_filter($varValue))){
+                if ([] === array_filter($varValue))
+                {
                     return [false, ''];
                 }
 
-                if (strpos($varValue[0] ?? '', '$') === 0)
+                if (str_starts_with($varValue[0] ?? '', '$'))
                 {
                     return [false, $varValue[0]];
                 }
@@ -648,7 +666,8 @@ class FileCompiler
     }
 
     /**
-     * Convert hex colors to rgb
+     * Convert hex colors to rgb.
+     *
      * @see https://www.php.net/manual/de/function.hexdec.php
      */
     protected function convertHexColor(string $color): array
@@ -656,7 +675,7 @@ class FileCompiler
         $rgb = [];
 
         // Try to convert using bitwise operation
-        if (\strlen($color) == 6)
+        if (6 === \strlen($color))
         {
             $dec = hexdec($color);
             $rgb['red'] = 0xFF & ($dec >> 0x10);
@@ -665,7 +684,7 @@ class FileCompiler
         }
 
         // Shorthand notation
-        elseif (\strlen($color) == 3)
+        elseif (3 === \strlen($color))
         {
             $rgb['red'] = hexdec(str_repeat(substr($color, 0, 1), 2));
             $rgb['green'] = hexdec(str_repeat(substr($color, 1, 1), 2));
@@ -676,80 +695,62 @@ class FileCompiler
     }
 
     /**
-     * Return the file content
+     * Create and save a File.
+     *
+     * @throws Exception
      */
-    public function getFileContent($filePath): string|false
+    private function saveFile(string $content, string $filename, string $ext = self::FILE_EXT): void
     {
-        if (!$this->fileExists($filePath))
+        $filePath = $this->targetDir.'/'.$filename.$ext;
+
+        if (!$this->fileSync && file_exists($path = $this->rootDir.'/'.$filePath))
         {
-            return false;
+            $blnSuccess = file_put_contents($path, $content."\n/** Compiled with Theme Compiler */");
+
+            if ($this->blnBackup)
+            {
+                copy($path, $this->rootDir.'/'.$this->backupDir.'/'.$filename.'_'.date('Y-m-d_H-i').$ext);
+            }
+        }
+        else
+        {
+            $objFile = new File($filePath);
+
+            if ($this->blnBackup && $objFile->exists())
+            {
+                $objFile->copyTo($this->backupDir.'/'.$filename.'_'.date('Y-m-d_H-i').$ext);
+            }
+
+            $objFile->truncate();
+            $blnSuccess = $objFile->write($content."\n/** Compiled with Theme Compiler */");
+            $objFile->close();
         }
 
-        return file_get_contents($this->rootDir . '/' . $filePath);
+        $this->msg(
+            ($blnSuccess ? 'File saved: ' : 'File could not be saved: ').$filePath,
+            $blnSuccess ? self::MSG_SUCCESS : self::MSG_ERROR,
+        );
+
+        unset($content);
     }
 
     /**
-     * Check if a file exists and return the full path
-     */
-    public function fileExists(string $strFilePath): bool|string
-    {
-        // Check the source file
-        if (!file_exists($this->rootDir . '/' . $strFilePath))
-        {
-            // Handle public bundle resources in web/
-            if (file_exists($this->rootDir . '/' .  $this->webDir . '/' . $strFilePath))
-            {
-                return $this->webDir . '/' . $strFilePath;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        return $strFilePath;
-    }
-
-    /**
-     * Check if a directory exists and return the full path
+     * Check if a directory exists and return the full path.
      */
     private function dirExists(string $strDirPath): bool|string
     {
         // Check the source file
-        if (!is_dir($this->rootDir . '/' . $strDirPath))
+        if (!is_dir($this->rootDir.'/'.$strDirPath))
         {
             // Handle public bundle resources in web/
-            if (is_dir($this->rootDir . '/' .  $this->webDir . '/' . $strDirPath))
+            if (is_dir($this->rootDir.'/'.$this->webDir.'/'.$strDirPath))
             {
-                return $this->webDir . '/' . $strDirPath;
+                return $this->webDir.'/'.$strDirPath;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         return $strDirPath;
-    }
-
-    /** Add messages
-     *
-     * @param $message
-     * @param string $type
-     */
-    public function msg($message, string $type = self::MSG_INFO): void
-    {
-        $this->messages[] = [
-            'message'  => $message,
-            'type'     => $type
-        ];
-    }
-
-    /**
-     * Returns all messages
-     */
-    public function getMessages(): array
-    {
-        return $this->messages;
     }
 }

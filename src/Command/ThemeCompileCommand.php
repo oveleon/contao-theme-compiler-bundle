@@ -29,14 +29,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class ThemeCompileCommand extends Command
 {
     protected static $defaultName = 'contao:themecompiler:compile';
+
     protected static $defaultDescription = 'Compiles themes that are registered with contao-theme-compiler-bundle.';
 
-    protected ContaoFramework $framework;
-
-    public function __construct(ContaoFramework $contaoFramework)
+    public function __construct(protected ContaoFramework $framework)
     {
-        $this->framework = $contaoFramework;
-
         parent::__construct();
     }
 
@@ -62,43 +59,29 @@ class ThemeCompileCommand extends Command
 
             $arrMessages = $compiler->getMessages();
 
-            if (empty($arrMessages))
+            if ([] === $arrMessages)
             {
                 $io->error('No configurations could be found');
             }
             else
             {
-                foreach ($arrMessages as $arrMessage) {
+                foreach ($arrMessages as $arrMessage)
+                {
+                    $type = $arrMessage['type'];
+                    $message = $arrMessage['message'];
 
-                    $type    = $arrMessage['type'];
-                    $message =  $arrMessage['message'];
-
-                    switch ($type)
+                    match ($type)
                     {
-                        case FileCompiler::MSG_HEAD:
-                            $io->title($message);
-                            break;
-
-                        case FileCompiler::MSG_ERROR:
-                        case FileCompiler::MSG_WARN:
-                            $io->warning($message);
-                            break;
-
-                        case FileCompiler::MSG_NOTE:
-                            $io->note($message);
-                            break;
-
-                        case FileCompiler::MSG_SUCCESS:
-                            $io->success($message);
-                            break;
-
-                        default:
-                            $io->block($message, 'INFO', 'fg=yellow', ' ');
-                    }
+                        FileCompiler::MSG_HEAD => $io->title($message),
+                        FileCompiler::MSG_ERROR, FileCompiler::MSG_WARN => $io->warning($message),
+                        FileCompiler::MSG_NOTE => $io->note($message),
+                        FileCompiler::MSG_SUCCESS => $io->success($message),
+                        default => $io->block($message, 'INFO', 'fg=yellow', ' '),
+                    };
                 }
             }
         }
-        catch(\Exception $e)
+        catch (\Exception $e)
         {
             $io->error($e->getMessage());
         }
