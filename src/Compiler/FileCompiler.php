@@ -143,7 +143,7 @@ class FileCompiler
 
         // Create backup dir if it does not exist yet
         if (
-            ($this->blnBackup = $this->objTheme->backupFiles)
+            ($this->blnBackup = (bool) strlen($this->objTheme->backupFiles))
             && !is_dir($this->backupDir = $objFile->path.'/compiler_backup')
         ) {
             new Folder($this->backupDir);
@@ -471,9 +471,9 @@ class FileCompiler
     /**
      * Return the parsed value.
      */
-    public function parseVariableValue($varValue): string|null
+    public function parseVariableValue($varValue): bool|string|null
     {
-        if ('' === $varValue)
+        if ('' === $varValue || is_bool($varValue))
         {
             return $varValue;
         }
