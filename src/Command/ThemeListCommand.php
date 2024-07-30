@@ -16,22 +16,15 @@ namespace Oveleon\ContaoThemeCompilerBundle\Command;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FilesModel;
 use Contao\ThemeModel;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Converts the StyleManager object to the new schema.
- *
- * @internal
- */
+#[AsCommand(name: 'contao:themecompiler:list', description: 'Outputs a list of all themes.')]
 class ThemeListCommand extends Command
 {
-    protected static $defaultName = 'contao:themecompiler:list';
-
-    protected static $defaultDescription = 'Gets a list of all themes';
-
     public function __construct(protected ContaoFramework $framework)
     {
         parent::__construct();
