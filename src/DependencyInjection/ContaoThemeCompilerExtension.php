@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao Theme Compiler Bundle.
  *
@@ -24,7 +26,6 @@ class ContaoThemeCompilerExtension extends Extension
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../config'));
         $loader->load('services.yaml');
-        $loader->load('commands.yaml');
 
         $container->setParameter('contao_theme_compiler.file_sync', $config['file_sync']);
     }

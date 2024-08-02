@@ -24,30 +24,30 @@ class CompilerUtils extends Backend
 {
     public function addCompileThemeButton($row, string $href, string $label, string $title, string $icon, string $attributes): string
     {
-        return '<a href="' . $this->addToUrl($href)  . '&amp;theme=' . $row['id'] . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
+        return '<a href="'.$this->addToUrl($href).'&amp;theme='.$row['id'].'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ';
     }
 
-	/**
-	 * Add save and compile button
-	 */
-	public function addSaveNCompileButton(array $arrButtons, DataContainer $dc): array
-	{
-		$arrButtons['saveNcompile'] = '<button type="submit" name="saveNcompile" id="saveNcompile" class="tl_submit themeCompileButton" accesskey="t">' . Image::getHtml('bundles/contaothemecompiler/icons/compile.svg') . ($GLOBALS['TL_LANG']['MSC']['saveNcompile'] ?? null) . '</button> ';
+    /**
+     * Add save and compile button.
+     */
+    public function addSaveNCompileButton(array $arrButtons, DataContainer $dc): array
+    {
+        $arrButtons['saveNcompile'] = '<button type="submit" name="saveNcompile" id="saveNcompile" class="tl_submit themeCompileButton" accesskey="t">'.Image::getHtml('bundles/contaothemecompiler/icons/compile.svg').($GLOBALS['TL_LANG']['MSC']['saveNcompile'] ?? null).'</button> ';
 
-		return $arrButtons;
-	}
+        return $arrButtons;
+    }
 
     /**
-     * Redirect to maintenance page
+     * Redirect to maintenance page.
      */
-	public function redirectMaintenanceAndCompile(DataContainer $dc): void
-	{
-		if (isset($_POST['saveNcompile']))
-		{
+    public function redirectMaintenanceAndCompile(DataContainer $dc): void
+    {
+        if (isset($_POST['saveNcompile']))
+        {
             if (
-                $dc->activeRecord &&
-                !$dc->activeRecord->tstamp &&
-                null !== ($objTheme = ThemeModel::findByPk($dc->id))
+                $dc->activeRecord
+                && !$dc->activeRecord->tstamp
+                && null !== ($objTheme = ThemeModel::findById($dc->id))
             ) {
                 $objTheme->tstamp = time();
                 $objTheme->save(); // Set timestamp to save new record
@@ -55,15 +55,15 @@ class CompilerUtils extends Backend
 
             $container = System::getContainer();
 
-			// Generate the link to compile the theme
-			$strUrl = $container->get('router')->generate('contao_backend', [
-                'do'    => 'maintenance',
-                'act'   => 'compile',
-                'rt'    => $container->get('contao.csrf.token_manager')->getDefaultTokenValue(),
-                'theme' => $dc->id
+            // Generate the link to compile the theme
+            $strUrl = $container->get('router')->generate('contao_backend', [
+                'do' => 'maintenance',
+                'act' => 'compile',
+                'rt' => $container->get('contao.csrf.token_manager')->getDefaultTokenValue(),
+                'theme' => $dc->id,
             ]);
 
-			$this->redirect($strUrl);
-		}
-	}
+            $this->redirect($strUrl);
+        }
+    }
 }
