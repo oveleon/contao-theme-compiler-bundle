@@ -473,7 +473,7 @@ class FileCompiler
      */
     public function parseVariableValue($varValue): bool|string|null
     {
-        if ('' === $varValue || is_bool($varValue))
+        if ('' === $varValue || is_bool($varValue) || null === $varValue)
         {
             return $varValue;
         }
