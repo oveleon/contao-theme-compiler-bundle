@@ -22,6 +22,7 @@ use Contao\ThemeModel;
 use Exception;
 use ScssPhp\ScssPhp\CompilationResult;
 use ScssPhp\ScssPhp\Compiler;
+use ScssPhp\ScssPhp\Deprecation;
 use ScssPhp\ScssPhp\Exception\SassException;
 use ScssPhp\ScssPhp\OutputStyle;
 
@@ -285,6 +286,11 @@ class FileCompiler
 
         // Set compiler formatter
         $objCompiler->setOutputStyle($this->blnDebug ? OutputStyle::EXPANDED : OutputStyle::COMPRESSED);
+
+        if (!$this->blnDebug && method_exists(Compiler::class, 'setSilenceDeprecations'))
+        {
+            $objCompiler->setSilenceDeprecations([Deprecation::mixedDecls]);
+        }
 
         // Set import paths
         if (null !== $this->importPaths)
