@@ -427,7 +427,7 @@ class FileCompiler
             }
             else
             {
-                $this->msg('Could not found: '.$strPath, self::MSG_ERROR);
+                $this->msg('Could not find: '.$sourcePath, self::MSG_ERROR);
             }
         }
     }
