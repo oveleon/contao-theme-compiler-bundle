@@ -43,7 +43,6 @@ class ThemeCompileCommand extends Command
             return Command::FAILURE;
         }
 
-        $io = new SymfonyStyle($input, $output);
         $this->framework->initialize();
 
         try
@@ -51,27 +50,34 @@ class ThemeCompileCommand extends Command
             $compiler = (new FileCompiler($input->getArgument('id')));
             $compiler->compileAll();
 
-            $arrMessages = $compiler->getMessages();
+            if (\true === $input->hasParameterOption(['--no-interaction', '-n'], \true)) {
+                // Noop
+            } else {
+                $io = new SymfonyStyle($input, $output);
 
-            if ([] === $arrMessages)
-            {
-                $io->error('No configurations could be found');
-            }
-            else
-            {
-                foreach ($arrMessages as $arrMessage)
+
+                $arrMessages = $compiler->getMessages();
+
+                if ([] === $arrMessages)
                 {
-                    $type = $arrMessage['type'];
-                    $message = $arrMessage['message'];
-
-                    match ($type)
+                    $io->error('No configurations could be found');
+                }
+                else
+                {
+                    foreach ($arrMessages as $arrMessage)
                     {
-                        FileCompiler::MSG_HEAD => $io->title($message),
-                        FileCompiler::MSG_ERROR, FileCompiler::MSG_WARN => $io->warning($message),
-                        FileCompiler::MSG_NOTE => $io->note($message),
-                        FileCompiler::MSG_SUCCESS => $io->success($message),
-                        default => $io->block($message, 'INFO', 'fg=yellow', ' '),
-                    };
+                        $type = $arrMessage['type'];
+                        $message = $arrMessage['message'];
+
+                        match ($type)
+                        {
+                            FileCompiler::MSG_HEAD => $io->title($message),
+                            FileCompiler::MSG_ERROR, FileCompiler::MSG_WARN => $io->warning($message),
+                            FileCompiler::MSG_NOTE => $io->note($message),
+                            FileCompiler::MSG_SUCCESS => $io->success($message),
+                            default => $io->block($message, 'INFO', 'fg=yellow', ' '),
+                        };
+                    }
                 }
             }
         }
